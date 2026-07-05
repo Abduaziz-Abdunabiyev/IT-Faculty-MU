@@ -63,7 +63,7 @@ export default function EventsPage() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await fetch(`${API_URL}/events/`);
+        const res = await fetch(`${API_URL}/api/events/`);
         const data = await res.json();
         const items = Array.isArray(data) ? data : data.results || [];
         setEvents(items);
@@ -118,7 +118,10 @@ export default function EventsPage() {
     ? extractYoutubeEmbed(activeEvent.video_url)
     : null;
   const mediaImage =
-    activeEvent?.image_display || activeEvent?.image_url || "/default.jpg";
+    activeEvent?.image ||
+    activeEvent?.image_display ||
+    activeEvent?.image_url ||
+    "/default-event.jpg";
 
   const handleRegisterSubmit = async () => {
     if (!activeEvent) return;
@@ -133,7 +136,7 @@ export default function EventsPage() {
     setRegisterLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/event-registrations/public/`, {
+      const res = await fetch(`${API_URL}/api/event-registrations/public/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

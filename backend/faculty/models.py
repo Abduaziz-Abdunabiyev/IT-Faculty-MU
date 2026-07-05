@@ -832,8 +832,8 @@ class Announcement(models.Model):
     short_description = models.CharField(max_length=300, blank=True)
     content = models.TextField()
     type = models.CharField(max_length=20, choices=ANNOUNCEMENT_TYPES)
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     image = models.ImageField(upload_to='announcements/images/', blank=True, null=True)
     file = models.FileField(upload_to='announcements/files/', blank=True, null=True)
@@ -976,6 +976,8 @@ class Statistics(models.Model):
         ordering = ["order"]
         verbose_name = "Statistic"
         verbose_name_plural = "Statistics"
+
+
 
 class Partner(models.Model):
     name = models.CharField(max_length=200)

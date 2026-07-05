@@ -235,26 +235,43 @@ export default function ResourcePage({
   }, [endpoint, currentPage]);
 
   useEffect(() => {
+    const fetchAllPages = async (url) => {
+      let items = [];
+      let nextUrl = url;
+
+      while (nextUrl) {
+        const payload = await request(nextUrl);
+
+        if (Array.isArray(payload)) {
+          items.push(...payload);
+          break;
+        }
+
+        items.push(...(payload.results || []));
+        nextUrl = payload.next;
+      }
+
+      return items;
+    };
+
     const loadSelectOptions = async () => {
-      const entries = Object.entries(selectOptions || {});
-      if (entries.length === 0) return;
+      const entries = Object.entries(selectOptions || []);
+
+      if (!entries.length) return;
 
       try {
         const results = await Promise.all(
           entries.map(async ([fieldPath, cfg]) => {
-            const payload = await request(cfg.endpoint);
-            const list = extractItems(payload);
+            const list = await fetchAllPages(cfg.endpoint);
 
-            const options = list.map((item) => {
-              const value = cfg.valueKey ? item[cfg.valueKey] : item.id;
-              const label = cfg.labelFn
+            const options = list.map((item) => ({
+              value: cfg.valueKey ? item[cfg.valueKey] : item.id,
+              label: cfg.labelFn
                 ? cfg.labelFn(item)
                 : cfg.labelKey
                   ? item[cfg.labelKey]
-                  : item.name || item.title || `#${item.id}`;
-
-              return { value, label };
-            });
+                  : item.name || item.title || `#${item.id}`,
+            }));
 
             return [fieldPath, options];
           }),

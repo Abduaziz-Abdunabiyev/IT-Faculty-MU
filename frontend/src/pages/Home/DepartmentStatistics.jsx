@@ -4,12 +4,9 @@ import { API_BASE } from "../../services/adminApi";
 function DepartmentStatistics() {
   const BASE_URL = API_BASE;
 
-  const [professors, setProfessors] = useState(0);
-  const [students, setStudents] = useState(0);
-  const [foreignStudents, setForeignStudents] = useState(0);
-  const [graduates, setGraduates] = useState(0);
+  const [statistics, setStatistics] = useState([]);
 
-  const animateCounter = (target, setter) => {
+  const animateCounter = (target, callback) => {
     let start = 0;
     const speed = 40;
 
@@ -17,10 +14,10 @@ function DepartmentStatistics() {
       start += Math.ceil(target / speed);
 
       if (start < target) {
-        setter(start);
+        callback(start);
         requestAnimationFrame(step);
       } else {
-        setter(target);
+        callback(target);
       }
     };
 
@@ -33,18 +30,24 @@ function DepartmentStatistics() {
       .then((data) => {
         const results = data?.results || data || [];
 
-        const prof = results.find((item) => item.name === "Professors");
-        const stud = results.find((item) => item.name === "Students");
-        const foreign = results.find(
-          (item) => item.name === "Foreign Students",
-        );
-        const grad = results.find((item) => item.name === "Graduates");
+        // Boshlang'ich qiymatlar
+        const initial = results.map((item) => ({
+          ...item,
+          displayValue: 0,
+        }));
 
-        if (prof) animateCounter(Number(prof.value) || 0, setProfessors);
-        if (stud) animateCounter(Number(stud.value) || 0, setStudents);
-        if (foreign)
-          animateCounter(Number(foreign.value) || 0, setForeignStudents);
-        if (grad) animateCounter(Number(grad.value) || 0, setGraduates);
+        setStatistics(initial);
+
+        // Animatsiya
+        results.forEach((item) => {
+          animateCounter(Number(item.value) || 0, (value) => {
+            setStatistics((prev) =>
+              prev.map((stat) =>
+                stat.id === item.id ? { ...stat, displayValue: value } : stat,
+              ),
+            );
+          });
+        });
       })
       .catch((error) => {
         console.error("Statistics fetch error:", error);
@@ -56,27 +59,27 @@ function DepartmentStatistics() {
       <div className="container-custom py-6">
         <style>
           {`
-          @keyframes lineMove {
-            0% {
-              transform: translateX(-120%);
-              opacity: 0;
+            @keyframes lineMove {
+              0% {
+                transform: translateX(-120%);
+                opacity: 0;
+              }
+              10% {
+                opacity: 1;
+              }
+              50% {
+                opacity: 1;
+              }
+              100% {
+                transform: translateX(220%);
+                opacity: 0;
+              }
             }
-            10% {
-              opacity: 1;
-            }
-            50% {
-              opacity: 1;
-            }
-            100% {
-              transform: translateX(220%);
-              opacity: 0;
-            }
-          }
 
-          .moving-stat-line {
-            animation: lineMove 1.8s linear infinite;
-          }
-        `}
+            .moving-stat-line {
+              animation: lineMove 1.8s linear infinite;
+            }
+          `}
         </style>
 
         <div className="text-center mb-10">
@@ -90,10 +93,13 @@ function DepartmentStatistics() {
         </div>
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-          <StatCard title="Professors" value={professors} />
-          <StatCard title="Students" value={students} />
-          <StatCard title="Foreign Students" value={foreignStudents} />
-          <StatCard title="Graduates" value={graduates} />
+          {statistics.map((item) => (
+            <StatCard
+              key={item.id}
+              title={item.name}
+              value={item.displayValue}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -102,8 +108,9 @@ function DepartmentStatistics() {
 
 function StatCard({ title, value }) {
   return (
-    <div className="bg-white dark:bg-[#1A2644] text-[#091728] dark:text-white rounded-lg shadow-darkblue p-6">
+    <div className="bg-white dark:bg-[#1A2644] text-[#091728] dark:text-white rounded-lg shadow-darkblue p-6 transition-transform duration-300 hover:-translate-y-1">
       <div className="text-2xl sm:text-3xl font-bold">{value}</div>
+
       <div className="mt-2 text-sm sm:text-base font-semibold">{title}</div>
     </div>
   );

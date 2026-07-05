@@ -2,6 +2,8 @@ export const API_BASE = (
   import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"
 ).replace(/\/$/, "");
 
+console.log("API =", API_BASE);
+
 const TOKEN_REFRESH_URL = `${API_BASE}/api/token/refresh/`;
 
 const ACCESS_TOKEN_KEYS = [
@@ -272,6 +274,13 @@ export function buildPayload(values, fields = []) {
 
       if (field.parse) {
         value = field.parse(value);
+      }
+
+      if (
+        ["date", "datetime-local", "time"].includes(field.type) &&
+        (value === "" || value === null)
+      ) {
+        return;
       }
 
       if (field.type === "number") {

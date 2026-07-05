@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { API_BASE } from "../../services/adminApi";
+import { API_BASE } from "../services/adminApi";
 
 function AnnouncementTimeline() {
   const [upcoming, setUpcoming] = useState([]);
