@@ -107,6 +107,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://itdepartmentmillatumidi-production.up.railway.app",
 ]
 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
+
 CORS_ALLOW_CREDENTIALS = False
 
 ROOT_URLCONF = "backend.urls"
