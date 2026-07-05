@@ -97,6 +97,16 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:4173",
 ]
 
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "itdepartmentmillatumidi-production.up.railway.app",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://itdepartmentmillatumidi-production.up.railway.app",
+]
+
 CORS_ALLOW_CREDENTIALS = False
 
 ROOT_URLCONF = "backend.urls"
