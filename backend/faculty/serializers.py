@@ -810,8 +810,10 @@ class TeacherSerializer(serializers.ModelSerializer):
         for item in teacher_courses_data:
             TeacherCourse.objects.create(
                 teacher=teacher,
-                **item
-    )
+                course=Course.objects.get(pk=item.get("course")),
+                year=item.get("year"),
+                role=item.get("role"),
+            )
 
         return teacher
 
