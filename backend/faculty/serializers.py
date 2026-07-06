@@ -1438,17 +1438,32 @@ class CourseJobSerializer(serializers.ModelSerializer):
 class CertificateRecipientSerializer(serializers.ModelSerializer):
     recipient_type = serializers.SerializerMethodField()
     recipient_name = serializers.SerializerMethodField()
+    certificate = serializers.PrimaryKeyRelatedField(
+        queryset=Certificate.objects.all(), required=False
+    )
 
     class Meta:
         model = CertificateRecipient
         fields = [
             "id",
+            "certificate",
             "teacher",
             "student",
             "department",
             "recipient_type",
             "recipient_name",
         ]
+
+    def validate(self, attrs):
+        # Standalone creation (POST /api/certificate-recipients/) must include a
+        # certificate; without it the model's NOT NULL FK raised an IntegrityError
+        # (500). Nested creation under a Certificate sets it on the parent, so skip
+        # the check there (self.parent is set for the nested many=True case).
+        if self.parent is None and not attrs.get("certificate"):
+            raise serializers.ValidationError(
+                {"certificate": "This field is required."}
+            )
+        return attrs
 
     def get_recipient_type(self, obj):
         if obj.teacher:
