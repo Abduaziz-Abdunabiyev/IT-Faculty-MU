@@ -214,6 +214,11 @@ class TeacherCourseSerializer(serializers.ModelSerializer):
 class EducationSerializer(serializers.ModelSerializer):
     degree_display = serializers.CharField(source="get_degree_display", read_only=True)
     id = serializers.IntegerField(required=False)
+    # Writable but optional: set from the request body for standalone creation,
+    # or injected via save(teacher=...) when nested under a Teacher.
+    teacher = serializers.PrimaryKeyRelatedField(
+        queryset=Teacher.objects.all(), required=False
+    )
 
     class Meta:
         model = Education
@@ -227,11 +232,22 @@ class EducationSerializer(serializers.ModelSerializer):
             "start_year",
             "end_year",
         ]
-        read_only_fields = ["teacher"]
+
+    def validate(self, attrs):
+        start, end = attrs.get("start_year"), attrs.get("end_year")
+        if start and end and end < start:
+            raise serializers.ValidationError(
+                {"end_year": "End year cannot be before start year."}
+            )
+        return attrs
 
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
+    teacher = serializers.PrimaryKeyRelatedField(
+        queryset=Teacher.objects.all(), required=False
+    )
+
     class Meta:
         model = WorkExperience
         fields = [
@@ -243,7 +259,14 @@ class WorkExperienceSerializer(serializers.ModelSerializer):
             "end_year",
             "description",
         ]
-        read_only_fields = ["teacher"]
+
+    def validate(self, attrs):
+        start, end = attrs.get("start_year"), attrs.get("end_year")
+        if start and end and end < start:
+            raise serializers.ValidationError(
+                {"end_year": "End year cannot be before start year."}
+            )
+        return attrs
 
 
 class ResearchSerializer(serializers.ModelSerializer):
@@ -253,8 +276,11 @@ class ResearchSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
 
     image_url = serializers.CharField(write_only=True, required=False, allow_blank=True, allow_null=True)
-    
+
     id = serializers.IntegerField(required=False)
+    teacher = serializers.PrimaryKeyRelatedField(
+        queryset=Teacher.objects.all(), required=False
+    )
 
     class Meta:
         model = Research
@@ -272,7 +298,15 @@ class ResearchSerializer(serializers.ModelSerializer):
             "period",
             "status",
         ]
-        read_only_fields = ["teacher", "image_display", "period", "status"]
+        read_only_fields = ["image_display", "period", "status"]
+
+    def validate(self, attrs):
+        start, end = attrs.get("start_year"), attrs.get("end_year")
+        if start and end and end < start:
+            raise serializers.ValidationError(
+                {"end_year": "End year cannot be before start year."}
+            )
+        return attrs
 
     def get_teacher_name(self, obj):
         return str(obj.teacher) if obj.teacher else "-"
@@ -468,8 +502,11 @@ class HonorAwardSerializer(serializers.ModelSerializer):
     image_display = serializers.SerializerMethodField()
 
     image_url = serializers.CharField(write_only=True, required=False, allow_blank=True, allow_null=True)
-    
+
     id = serializers.IntegerField(required=False)
+    teacher = serializers.PrimaryKeyRelatedField(
+        queryset=Teacher.objects.all(), required=False
+    )
 
     class Meta:
         model = HonorAward
@@ -483,7 +520,7 @@ class HonorAwardSerializer(serializers.ModelSerializer):
             "description",
             "year",
         ]
-        read_only_fields = ["teacher", "image_display"]
+        read_only_fields = ["image_display"]
 
     def get_image_display(self, obj):
         request = self.context.get("request")
@@ -517,6 +554,9 @@ class TimetableSerializer(serializers.ModelSerializer):
     )
 
     id = serializers.IntegerField(required=False)
+    teacher = serializers.PrimaryKeyRelatedField(
+        queryset=Teacher.objects.all(), required=False
+    )
 
     class Meta:
         model = Timetable
@@ -533,13 +573,21 @@ class TimetableSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = [
-            "teacher",
             "teacher_name",
             "course_name",
         ]
 
     def get_teacher_name(self, obj):
         return str(obj.teacher) if obj.teacher else ""
+
+    def validate(self, attrs):
+        start = attrs.get("start_time")
+        end = attrs.get("end_time")
+        if start and end and end <= start:
+            raise serializers.ValidationError(
+                {"end_time": "End time must be after start time."}
+            )
+        return attrs
 
     def create(self, validated_data):
         teacher = validated_data.pop("teacher", None)
@@ -569,11 +617,15 @@ class TimetableSerializer(serializers.ModelSerializer):
  
 class OfficeHourSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
+    teacher = serializers.PrimaryKeyRelatedField(
+        queryset=Teacher.objects.all(), required=False
+    )
 
     class Meta:
         model = OfficeHour
         fields = [
             "id",
+            "teacher",
             "day",
             "start_time",
             "end_time",
@@ -807,6 +859,7 @@ class TeacherSerializer(serializers.ModelSerializer):
     office_hours_data
 )
 
+        seen_tc = set()
         for item in teacher_courses_data:
             tc_serializer = TeacherCourseNestedSerializer(
                 data=item, context=self.context
@@ -814,6 +867,11 @@ class TeacherSerializer(serializers.ModelSerializer):
             tc_serializer.is_valid(raise_exception=True)
             validated = dict(tc_serializer.validated_data)
             validated.pop("id", None)
+            course_obj = validated.get("course")
+            key = (course_obj.pk if course_obj else None, validated.get("year"))
+            if key in seen_tc:
+                continue  # skip duplicate (course, year) -> avoids unique_together 500
+            seen_tc.add(key)
             TeacherCourse.objects.create(teacher=teacher, **validated)
 
         return teacher
@@ -886,6 +944,7 @@ class TeacherSerializer(serializers.ModelSerializer):
 
         if teacher_courses_data is not None:
             teacher.teacher_courses.all().delete()
+            seen_tc = set()
             for item in teacher_courses_data:
                 tc_serializer = TeacherCourseNestedSerializer(
                     data=item, context=self.context
@@ -893,6 +952,11 @@ class TeacherSerializer(serializers.ModelSerializer):
                 tc_serializer.is_valid(raise_exception=True)
                 validated = dict(tc_serializer.validated_data)
                 validated.pop("id", None)
+                course_obj = validated.get("course")
+                key = (course_obj.pk if course_obj else None, validated.get("year"))
+                if key in seen_tc:
+                    continue  # skip duplicate (course, year) -> avoids unique_together 500
+                seen_tc.add(key)
                 TeacherCourse.objects.create(teacher=teacher, **validated)
         return teacher
 
@@ -1455,14 +1519,20 @@ class CertificateRecipientSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
-        # Standalone creation (POST /api/certificate-recipients/) must include a
-        # certificate; without it the model's NOT NULL FK raised an IntegrityError
-        # (500). Nested creation under a Certificate sets it on the parent, so skip
-        # the check there (self.parent is set for the nested many=True case).
-        if self.parent is None and not attrs.get("certificate"):
-            raise serializers.ValidationError(
-                {"certificate": "This field is required."}
-            )
+        # Only for standalone creation (POST /api/certificate-recipients/); nested
+        # creation under a Certificate is handled by the parent, which sets these.
+        if self.parent is None:
+            if not attrs.get("certificate"):
+                raise serializers.ValidationError(
+                    {"certificate": "This field is required."}
+                )
+            # The model requires EXACTLY one of teacher/student/department;
+            # mirror it here so bad input is a clean 400 instead of a 500.
+            chosen = [attrs.get("teacher"), attrs.get("student"), attrs.get("department")]
+            if sum(1 for x in chosen if x) != 1:
+                raise serializers.ValidationError(
+                    "Exactly one of teacher, student or department must be selected."
+                )
         return attrs
 
     def get_recipient_type(self, obj):
@@ -1533,9 +1603,9 @@ class CertificateSerializer(serializers.ModelSerializer):
             teacher_id = recipient.get("teacher") or None
             student_id = recipient.get("student") or None
             department_id = recipient.get("department") or None
-            # Skip empty rows — the model requires exactly one recipient and
-            # would otherwise raise a ValidationError (500).
-            if not (teacher_id or student_id or department_id):
+            # The model requires EXACTLY one recipient; skip empty (0) or
+            # ambiguous (2+) rows rather than letting clean() raise a 500.
+            if sum(1 for x in (teacher_id, student_id, department_id) if x) != 1:
                 continue
             CertificateRecipient.objects.create(
                 certificate=certificate,
