@@ -1488,9 +1488,12 @@ class CertificateRecipientSerializer(serializers.ModelSerializer):
 
 
 class CertificateSerializer(serializers.ModelSerializer):
+    # Read-only: recipient input is parsed manually in create()/update() from
+    # initial_data (it arrives as a JSON string in multipart or a list in JSON),
+    # so we must NOT let this nested field validate input or land in validated_data.
     recipients = CertificateRecipientSerializer(
         many=True,
-        required=False
+        read_only=True,
     )
 
     image_url = serializers.SerializerMethodField()
@@ -1514,47 +1517,53 @@ class CertificateSerializer(serializers.ModelSerializer):
             "recipients",
         ]
 
-    def create(self, validated_data):
-        recipients_data = self.initial_data.get("recipients", "[]")
+    def _parse_recipients(self):
+        data = self.initial_data.get("recipients", [])
+        if isinstance(data, str):
+            try:
+                data = json.loads(data)
+            except Exception:
+                data = []
+        return data if isinstance(data, list) else []
 
-        try:
-            recipients_data = json.loads(recipients_data)
-        except Exception:
-            recipients_data = []
-
-        certificate = Certificate.objects.create(**validated_data)
-
+    def _sync_recipients(self, certificate, recipients_data):
         for recipient in recipients_data:
+            if not isinstance(recipient, dict):
+                continue
+            teacher_id = recipient.get("teacher") or None
+            student_id = recipient.get("student") or None
+            department_id = recipient.get("department") or None
+            # Skip empty rows — the model requires exactly one recipient and
+            # would otherwise raise a ValidationError (500).
+            if not (teacher_id or student_id or department_id):
+                continue
             CertificateRecipient.objects.create(
                 certificate=certificate,
-                teacher_id=recipient.get("teacher") or None,
-                student_id=recipient.get("student") or None,
-                department_id=recipient.get("department") or None,
+                teacher_id=teacher_id,
+                student_id=student_id,
+                department_id=department_id,
             )
+
+    def create(self, validated_data):
+        validated_data.pop("recipients", None)
+        recipients_data = self._parse_recipients()
+
+        certificate = Certificate.objects.create(**validated_data)
+        self._sync_recipients(certificate, recipients_data)
 
         return certificate
 
     def update(self, instance, validated_data):
         validated_data.pop("recipients", None)
+        recipients_present = "recipients" in self.initial_data
 
-        recipients_data = self.initial_data.get("recipients")
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-
         instance.save()
-        if recipients_data is not None:
-            if isinstance(recipients_data, str):
-                recipients_data = json.loads(recipients_data)
 
+        if recipients_present:
             instance.recipients.all().delete()
-
-            for item in recipients_data:
-                CertificateRecipient.objects.create(
-                    certificate=instance,
-                    teacher_id=item.get("teacher") or None,
-                    student_id=item.get("student") or None,
-                    department_id=item.get("department") or None,
-                )
+            self._sync_recipients(instance, self._parse_recipients())
 
         return instance
 
