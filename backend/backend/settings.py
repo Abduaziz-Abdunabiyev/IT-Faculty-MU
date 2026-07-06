@@ -51,6 +51,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_filters",
 
+    # Cloudinary media storage (persistent uploads).
+    # Placed AFTER staticfiles so it is used for MEDIA only, not static.
+    "cloudinary_storage",
+    "cloudinary",
+
     # 3rd party apps
     "rest_framework",
     "corsheaders",
@@ -177,9 +182,36 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-STATICFILES_STORAGE = (
-    "whitenoise.storage.CompressedManifestStaticFilesStorage"
-)
+# --- Cloudinary media storage -------------------------------------------------
+# User-uploaded files (teacher photos, course/event images, PDFs, ...) must live
+# on Cloudinary, because Railway's container filesystem is EPHEMERAL — anything
+# uploaded through the admin would otherwise vanish on the next deploy/restart.
+#
+# When the three credentials are present (set as env vars on Railway) media goes
+# to Cloudinary. When they are absent (e.g. a fresh local checkout) we fall back
+# to the local filesystem so development still works without an account.
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME", ""),
+    "API_KEY": os.getenv("CLOUDINARY_API_KEY", ""),
+    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET", ""),
+}
+
+USE_CLOUDINARY = all(CLOUDINARY_STORAGE.values())
+
+STORAGES = {
+    "default": {
+        "BACKEND": (
+            # Custom storage: picks image/raw/video resource type per file so
+            # PDFs and .docx (raw) are stored & served correctly, not as images.
+            "backend.storages.MediaAutoResourceCloudinaryStorage"
+            if USE_CLOUDINARY
+            else "django.core.files.storage.FileSystemStorage"
+        ),
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # JWT
 SIMPLE_JWT = {

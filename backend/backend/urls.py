@@ -1,7 +1,9 @@
+import re
+
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
-from django.conf.urls.static import static
+from django.views.static import serve as media_serve
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -27,7 +29,18 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
 ]
 
-urlpatterns += static(
-    settings.MEDIA_URL,
-    document_root=settings.MEDIA_ROOT,
-)
+# Serve user-uploaded media files (images, docs) in BOTH dev and production.
+#
+# NOTE: django.conf.urls.static.static() only registers a route when
+# DEBUG=True, so on Railway (DEBUG=False) every /media/... request 404'd and
+# all images disappeared. The explicit re_path below serves media regardless
+# of DEBUG, using the files committed to the repo.
+_media_prefix = re.escape(settings.MEDIA_URL.lstrip("/"))
+
+urlpatterns += [
+    re_path(
+        rf"^{_media_prefix}(?P<path>.*)$",
+        media_serve,
+        {"document_root": settings.MEDIA_ROOT},
+    ),
+]
