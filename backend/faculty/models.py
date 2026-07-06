@@ -100,6 +100,8 @@ class Teacher(models.Model):
                 password=temp_password,
                 first_name=self.first_name,
                 last_name=self.last_name,
+                role="teacher",
+                must_change_password=True,
             )
 
             self.user = user
