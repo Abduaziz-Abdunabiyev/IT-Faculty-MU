@@ -8,8 +8,6 @@ backend/*.sqlite3
 backend/.env
 frontend/.env
 
-# Media
-backend/media/
 
 # Static
 backend/staticfiles/
