@@ -808,12 +808,13 @@ class TeacherSerializer(serializers.ModelSerializer):
 )
 
         for item in teacher_courses_data:
-            TeacherCourse.objects.create(
-                teacher=teacher,
-                course=Course.objects.get(pk=item.get("course")),
-                year=item.get("year"),
-                role=item.get("role"),
+            tc_serializer = TeacherCourseNestedSerializer(
+                data=item, context=self.context
             )
+            tc_serializer.is_valid(raise_exception=True)
+            validated = dict(tc_serializer.validated_data)
+            validated.pop("id", None)
+            TeacherCourse.objects.create(teacher=teacher, **validated)
 
         return teacher
 
@@ -886,13 +887,13 @@ class TeacherSerializer(serializers.ModelSerializer):
         if teacher_courses_data is not None:
             teacher.teacher_courses.all().delete()
             for item in teacher_courses_data:
-                course_id = item.pop("course")
-                TeacherCourse.objects.create(
-                    teacher=teacher,
-                    course=Course.objects.get(pk=course_id),
-                    year=item.get("year"),
-                    role=item.get("role"),
+                tc_serializer = TeacherCourseNestedSerializer(
+                    data=item, context=self.context
                 )
+                tc_serializer.is_valid(raise_exception=True)
+                validated = dict(tc_serializer.validated_data)
+                validated.pop("id", None)
+                TeacherCourse.objects.create(teacher=teacher, **validated)
         return teacher
 
     def get_courses(self, obj):
