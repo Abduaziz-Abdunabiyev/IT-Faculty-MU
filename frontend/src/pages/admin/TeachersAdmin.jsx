@@ -38,6 +38,7 @@ export default function TeachersAdmin() {
       name: "email",
       label: "Email",
       type: "email",
+      required: true,
       placeholder: "john.smith@university.edu",
     },
     {

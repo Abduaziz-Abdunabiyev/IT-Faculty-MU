@@ -198,12 +198,25 @@ export async function request(path, options = {}) {
   if (!response.ok) {
     const errData = await readErrorData(response);
 
+    // Flatten DRF field errors like {"email": ["This field is required."]}
+    // into a readable message instead of a generic "Request failed".
+    const fieldErrors =
+      errData && typeof errData === "object" && !Array.isArray(errData)
+        ? Object.entries(errData)
+            .map(([key, val]) => {
+              const text = Array.isArray(val) ? val.join(", ") : String(val);
+              return key === "non_field_errors" ? text : `${key}: ${text}`;
+            })
+            .join(" | ")
+        : "";
+
     const errorMessage =
       errData?.detail ||
       errData?.message ||
       errData?.non_field_errors?.[0] ||
       errData?.error ||
       (typeof errData === "string" ? errData : "") ||
+      fieldErrors ||
       `Request failed with status ${response.status}`;
 
     if (auth && retryOnAuthError && isAuthError(response, errData)) {
