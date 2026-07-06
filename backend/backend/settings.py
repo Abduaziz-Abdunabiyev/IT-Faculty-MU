@@ -149,19 +149,31 @@ TEMPLATES = [
 WSGI_APPLICATION = "backend.wsgi.application"
 
 # Database
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),
-        "OPTIONS": {
-            "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+# Prefer a single DATABASE_URL (e.g. Railway's ${{MySQL.MYSQL_URL}}). Fall back
+# to the individual DB_* vars for local development.
+import dj_database_url
+
+if os.getenv("DATABASE_URL"):
+    DATABASES = {
+        "default": dj_database_url.parse(
+            os.environ["DATABASE_URL"],
+            conn_max_age=600,
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT"),
+            "OPTIONS": {
+                "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+            },
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
