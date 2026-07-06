@@ -34,10 +34,13 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv(
-    "ALLOWED_HOSTS",
-    "localhost,127.0.0.1"
-).split(",")
+
+def _env_list(name, default):
+    """Read a comma-separated env var into a list, or fall back to `default`."""
+    raw = os.getenv(name)
+    if not raw:
+        return list(default)
+    return [item.strip() for item in raw.split(",") if item.strip()]
 
 AUTH_USER_MODEL = "accounts.User"
 
@@ -94,25 +97,32 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:4173",
-    "http://127.0.0.1:4173",
+# Hosts / origins are env-driven so redeploys to new Railway/Vercel URLs don't
+# require code changes. The defaults already allow ANY *.up.railway.app backend
+# and ANY *.vercel.app frontend, so in most cases nothing needs to be set. Pin
+# to exact domains via the env vars below if you want to be strict.
+ALLOWED_HOSTS = _env_list(
+    "ALLOWED_HOSTS",
+    ["localhost", "127.0.0.1", ".up.railway.app"],
+)
 
-    "https://it-department-millat-umidi.vercel.app",
-]
+CORS_ALLOWED_ORIGINS = _env_list(
+    "CORS_ALLOWED_ORIGINS",
+    [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:4173",
+        "http://127.0.0.1:4173",
+    ],
+)
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "itdepartmentmillatumidi-production.up.railway.app",
-]
+# Allow any Vercel deployment (production + preview URLs) to call the API.
+CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://.*\.vercel\.app$"]
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://itdepartmentmillatumidi-production.up.railway.app",
-    "https://it-department-millat-umidi.vercel.app",
-]
+CSRF_TRUSTED_ORIGINS = _env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    ["https://*.up.railway.app", "https://*.vercel.app"],
+)
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
