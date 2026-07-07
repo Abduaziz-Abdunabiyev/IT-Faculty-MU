@@ -204,7 +204,15 @@ export default function ResearchPage() {
                 <ResearchCard
                   key={research.id}
                   research={research}
-                  onClick={() => setSelectedResearch(research)}
+                  onClick={() =>
+                    research.link
+                      ? window.open(
+                          research.link,
+                          "_blank",
+                          "noopener,noreferrer",
+                        )
+                      : setSelectedResearch(research)
+                  }
                 />
               ))}
             </section>
