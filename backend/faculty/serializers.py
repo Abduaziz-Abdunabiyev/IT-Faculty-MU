@@ -343,6 +343,12 @@ class PublicationSerializer(serializers.ModelSerializer):
         source="teacher.id",
         read_only=True
     )
+    # Optional on input: a teacher adding from their own profile has it injected
+    # via perform_create(save(teacher=user.teacher)); admins send it explicitly.
+    teacher = serializers.PrimaryKeyRelatedField(
+        queryset=Teacher.objects.all(),
+        required=False,
+    )
 
     image_display = serializers.SerializerMethodField()
     file_display = serializers.SerializerMethodField()

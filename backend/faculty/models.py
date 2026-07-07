@@ -11,7 +11,7 @@ User = get_user_model()
 
 
 def validate_pdf(file):
-    if not file.name.endswith(".pdf"):
+    if not file.name.lower().endswith(".pdf"):
         raise ValidationError("Faqat PDF fayl yuklash mumkin")
 
 

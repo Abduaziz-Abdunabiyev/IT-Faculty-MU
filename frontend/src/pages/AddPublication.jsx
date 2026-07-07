@@ -80,8 +80,16 @@ function AddPublication() {
           }
         />
 
-        {/* 🔥 FAqat BITTA FILE */}
-        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+        <div>
+          <label className="block text-sm text-slate-600 mb-1">
+            Publication file (PDF only, optional)
+          </label>
+          <input
+            type="file"
+            accept="application/pdf,.pdf"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+        </div>
 
         <button className="bg-[#317873] text-white px-4 py-2 rounded">
           Save Publication
