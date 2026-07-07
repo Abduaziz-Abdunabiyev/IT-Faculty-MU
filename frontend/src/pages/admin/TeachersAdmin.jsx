@@ -272,6 +272,13 @@ export default function TeachersAdmin() {
           placeholder: "Describe the research project...",
         },
         {
+          name: "link",
+          label: "Link",
+          type: "url",
+          fullWidth: true,
+          placeholder: "https://example.com/research-paper",
+        },
+        {
           name: "start_year",
           label: "Start year",
           type: "number",

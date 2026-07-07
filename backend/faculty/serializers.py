@@ -293,6 +293,7 @@ class ResearchSerializer(serializers.ModelSerializer):
             "image_url",
             "image_display",
             "description",
+            "link",
             "start_year",
             "end_year",
             "period",

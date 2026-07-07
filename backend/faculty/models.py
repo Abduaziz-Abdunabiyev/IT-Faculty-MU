@@ -468,6 +468,7 @@ class Research(models.Model):
     project_title = models.CharField(max_length=200)
     image = models.ImageField(upload_to='research/', blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    link = models.URLField(blank=True, null=True)
     start_year = models.PositiveIntegerField()
     end_year = models.PositiveIntegerField(blank=True, null=True)
 
