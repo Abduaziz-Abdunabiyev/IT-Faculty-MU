@@ -9,8 +9,10 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function CoursesTab({ courses, isOwner, onDelete }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -32,7 +34,7 @@ export default function CoursesTab({ courses, isOwner, onDelete }) {
             "
           >
             <Plus size={18} />
-            Add Course
+            {t("profile.courses.add")}
           </button>
         </div>
       )}
@@ -85,7 +87,7 @@ export default function CoursesTab({ courses, isOwner, onDelete }) {
                     font-medium
                   "
                 >
-                  {course.credits} Credits
+                  {course.credits} {t("profile.courses.credits")}
                 </div>
               </div>
 
@@ -98,7 +100,7 @@ export default function CoursesTab({ courses, isOwner, onDelete }) {
                 <p className="mt-1 text-[#317873] font-medium">{course.code}</p>
 
                 <p className="mt-4 text-slate-600 line-clamp-3 dark:text-slate-300">
-                  {course.description || "No description provided."}
+                  {course.description || t("profile.courses.noDescription")}
                 </p>
 
                 <div className="mt-6 grid grid-cols-2 gap-4">
@@ -107,11 +109,12 @@ export default function CoursesTab({ courses, isOwner, onDelete }) {
 
                     <div>
                       <p className="text-xs text-slate-400 dark:text-slate-500">
-                        Teacher
+                        {t("profile.courses.teacher")}
                       </p>
 
                       <p className="font-medium text-sm dark:text-white">
-                        {course.teachers?.[0]?.name || "Not assigned"}
+                        {course.teachers?.[0]?.name ||
+                          t("profile.courses.notAssigned")}
                       </p>
                     </div>
                   </div>
@@ -120,10 +123,12 @@ export default function CoursesTab({ courses, isOwner, onDelete }) {
                     <GraduationCap size={18} className="text-[#317873]" />
 
                     <div>
-                      <p className="text-xs text-slate-400">Semester</p>
+                      <p className="text-xs text-slate-400">
+                        {t("profile.courses.semester")}
+                      </p>
 
                       <p className="font-medium text-sm">
-                        {course.semester_name || "Unknown"}
+                        {course.semester_name || t("profile.courses.unknown")}
                       </p>
                     </div>
                   </div>
@@ -146,7 +151,7 @@ export default function CoursesTab({ courses, isOwner, onDelete }) {
                       to={`/course_detail/${course.code}`}
                       className="text-sm"
                     >
-                      Course details
+                      {t("profile.courses.details")}
                     </Link>
                   </div>
 
@@ -202,11 +207,11 @@ export default function CoursesTab({ courses, isOwner, onDelete }) {
           "
         >
           <h3 className="text-xl font-semibold text-slate-700  dark:text-white">
-            No courses assigned
+            {t("profile.courses.emptyTitle")}
           </h3>
 
           <p className="text-slate-500 dark:text-slate-400 mt-2">
-            This teacher doesn't have any courses yet.
+            {t("profile.courses.emptySubtitle")}
           </p>
         </div>
       )}

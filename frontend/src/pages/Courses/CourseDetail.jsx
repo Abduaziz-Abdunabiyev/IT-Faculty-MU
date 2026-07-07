@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   X,
@@ -19,6 +20,7 @@ import { API_BASE } from "../../services/adminApi";
 const APP_BASE_URL = API_BASE;
 
 function CourseDetail() {
+  const { t } = useTranslation();
   const { code } = useParams();
   const navigate = useNavigate();
 
@@ -66,10 +68,10 @@ function CourseDetail() {
   };
 
   const getCourseTitle = (courseData) =>
-    courseData?.name || courseData?.title || "Course";
+    courseData?.name || courseData?.title || t("coursesPage.courseFallback");
 
   const getCourseDescription = (courseData) =>
-    courseData?.description || "Course description will appear here.";
+    courseData?.description || t("coursesPage.detail.descriptionFallback");
 
   const getCourseImage = (courseData) =>
     courseData?.image_url ||
@@ -115,7 +117,8 @@ function CourseDetail() {
         if (ignore) return;
         setCourse(courseData);
       } catch (err) {
-        if (!ignore) setError(err?.message || "Could not load course.");
+        if (!ignore)
+          setError(err?.message || t("coursesPage.detail.loadError"));
       } finally {
         if (!ignore) setLoading(false);
       }
@@ -193,7 +196,7 @@ function CourseDetail() {
 
   const heroTitle =
     course?.hero_title ||
-    `What is ${courseName}? <br /> Definition, Examples, Jobs and More`;
+    t("coursesPage.detail.heroTitleFallback", { name: courseName });
 
   const pageImage = getCourseImage(course);
 
@@ -214,11 +217,13 @@ function CourseDetail() {
 
   const videos = items.filter((item) => item.item_type === "video");
 
-  const aboutTitle = course?.about_title || "About This Program";
+  const aboutTitle =
+    course?.about_title || t("coursesPage.detail.aboutTitleFallback");
 
   const aboutDescription = course?.about_description || courseDescription;
 
-  if (loading && !course) return <p className="p-10">Loading...</p>;
+  if (loading && !course)
+    return <p className="p-10">{t("coursesPage.detail.loading")}</p>;
 
   if (error && !course) {
     return (
@@ -228,7 +233,7 @@ function CourseDetail() {
           onClick={() => navigate("/courses")}
           className="mt-4 rounded-xl bg-[#192a56] px-5 py-3 text-white"
         >
-          Back to Courses
+          {t("coursesPage.detail.backToCourses")}
         </button>
       </div>
     );
@@ -242,7 +247,7 @@ function CourseDetail() {
             onClick={() => navigate("/")}
             className="cursor-pointer hover:underline"
           >
-            Home
+            {t("coursesPage.detail.home")}
           </span>
 
           <span>›</span>
@@ -251,7 +256,7 @@ function CourseDetail() {
             onClick={() => navigate("/courses")}
             className="cursor-pointer hover:underline"
           >
-            Courses
+            {t("coursesPage.detail.courses")}
           </span>
 
           <span>›</span>
@@ -267,7 +272,7 @@ function CourseDetail() {
         <p className="mt-4 text-lg max-w-2xl mx-auto">
           {course?.hero_description ||
             courseDescription ||
-            "Course description will appear here."}
+            t("coursesPage.detail.descriptionFallback")}
         </p>
       </div>
 
@@ -338,7 +343,7 @@ function CourseDetail() {
               {/* Content */}
               <div>
                 <span className="inline-flex items-center rounded-full border border-[#B69B83]/25 bg-white/70 px-4 py-2 text-xs sm:text-sm font-medium text-[#7A644F] shadow-sm backdrop-blur dark:border-[#AAF0D1]/20 dark:bg-white/5 dark:text-[#AAF0D1]">
-                  About Program
+                  {t("coursesPage.detail.aboutBadge")}
                 </span>
 
                 <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1]">
@@ -371,7 +376,9 @@ function CourseDetail() {
       dark:bg-[#317873]/10 text-white
     "
                   >
-                    <p className="text-xs uppercase text-slate-400">Course</p>
+                    <p className="text-xs uppercase text-slate-400">
+                      {t("coursesPage.detail.courseLabel")}
+                    </p>
                     <p className="font-bold text-slate-800 dark:text-white">
                       {courseName}
                     </p>
@@ -388,7 +395,9 @@ function CourseDetail() {
       dark:bg-[#317873]/10 text-white
     "
                   >
-                    <p className="text-xs uppercase text-slate-400">Credits</p>
+                    <p className="text-xs uppercase text-slate-400">
+                      {t("coursesPage.detail.creditsLabel")}
+                    </p>
                     <p className="font-bold text-slate-800 text-center dark:text-white">
                       {course?.credits}
                     </p>
@@ -405,9 +414,14 @@ function CourseDetail() {
       dark:bg-[#317873]/10 text-white
     "
                   >
-                    <p className="text-xs uppercase text-slate-400">Semester</p>
+                    <p className="text-xs uppercase text-slate-400">
+                      {t("coursesPage.detail.semesterLabel")}
+                    </p>
                     <p className="font-bold text-slate-800 dark:text-white">
-                      {course?.semester_name || `Semester ${course?.semester}`}
+                      {course?.semester_name ||
+                        t("coursesPage.detail.semesterNumber", {
+                          number: course?.semester,
+                        })}
                     </p>
                   </div>
                 </div>
@@ -419,14 +433,14 @@ function CourseDetail() {
       {getCourseVideo(course) && (
         <div className="max-w-4xl mx-auto px-6 pb-12 text-center">
           <h2 className="mt-2 mb-4 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1]">
-            Quick Introduction
+            {t("coursesPage.detail.quickIntroduction")}
           </h2>
 
           <div className="rounded-xl overflow-hidden shadow-lg">
             <iframe
               src={getCourseVideo(course)}
               className="w-full h-[450px]"
-              title="Course Video"
+              title={t("coursesPage.detail.courseVideoTitle")}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
@@ -449,11 +463,11 @@ function CourseDetail() {
 
                       <div>
                         <h2 className="text-4xl font-bold text-slate-900 dark:text-white">
-                          Course Roadmap
+                          {t("coursesPage.detail.courseRoadmap")}
                         </h2>
 
                         <p className="text-slate-500 dark:text-white">
-                          Weekly learning structure
+                          {t("coursesPage.detail.weeklyStructure")}
                         </p>
                       </div>
                     </div>
@@ -516,14 +530,16 @@ function CourseDetail() {
                                   className="text-xl font-bold text-slate-900
                                 dark:text-white"
                                 >
-                                  Week {week.week_number}
+                                  {t("coursesPage.detail.weekNumber", {
+                                    number: week.week_number,
+                                  })}
                                 </h3>
 
                                 <p
                                   className="mt-2 text-slate-500
                                 dark:text-white"
                                 >
-                                  Click to view lecture details
+                                  {t("coursesPage.detail.clickToView")}
                                 </p>
                               </div>
 
@@ -554,10 +570,12 @@ function CourseDetail() {
 
                       <div>
                         <h2 className="text-4xl font-bold text-slate-900 dark:text-white">
-                          Assessment
+                          {t("coursesPage.detail.assessment")}
                         </h2>
 
-                        <p className="text-slate-500">Grading breakdown</p>
+                        <p className="text-slate-500">
+                          {t("coursesPage.detail.gradingBreakdown")}
+                        </p>
                       </div>
                     </div>
 
@@ -612,7 +630,7 @@ dark:text-[#AAF0D1]
                       <div className="bg-slate-50 dark:bg-slate-700 px-6 py-6">
                         <div className="flex justify-between items-center">
                           <span className="text-3xl font-black text-[#317873] dark:text-[#AAF0D1] ">
-                            Total
+                            {t("coursesPage.detail.total")}
                           </span>
 
                           <span className="text-3xl font-black text-[#317873] dark:text-white">
@@ -632,15 +650,14 @@ dark:text-[#AAF0D1]
         <section className="max-w-6xl mx-auto px-6 py-16">
           <div className="mb-12">
             <p className="inline-flex items-center rounded-full border border-[#B69B83]/25 bg-white/70 px-4 py-2 text-xs sm:text-sm font-medium text-[#7A644F] shadow-sm backdrop-blur dark:border-[#AAF0D1]/20 dark:bg-white/5 dark:text-[#AAF0D1]">
-              Industry Tools
+              {t("coursesPage.detail.industryTools")}
             </p>
             <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1]">
-              Applications You'll Use
+              {t("coursesPage.detail.applicationsTitle")}
             </h2>
             <div className="mt-4 h-1 w-24 rounded-full bg-gradient-to-r from-[#317873] via-[#AAF0D1] to-transparent" />
             <p className="mt-4 max-w-3xl text-lg text-slate-500 dark:text-white">
-              Industry-standard platforms and software used throughout this
-              course.
+              {t("coursesPage.detail.applicationsDesc")}
             </p>
           </div>
 
@@ -705,7 +722,7 @@ dark:text-[#AAF0D1]
           font-semibold
         "
                 >
-                  Open Tool
+                  {t("coursesPage.detail.openTool")}
                   <span
                     className="
             text-xl
@@ -727,11 +744,11 @@ dark:text-[#AAF0D1]
         <section className="max-w-6xl mx-auto px-6 py-20">
           <div className="mb-14">
             <p className="inline-flex items-center rounded-full border border-[#B69B83]/25 bg-white/70 px-4 py-2 text-xs sm:text-sm font-medium text-[#7A644F] shadow-sm backdrop-blur dark:border-[#AAF0D1]/20 dark:bg-white/5 dark:text-[#AAF0D1]">
-              Practical Experience
+              {t("coursesPage.detail.practicalExperience")}
             </p>
 
             <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1]">
-              Practice Projects
+              {t("coursesPage.detail.practiceProjects")}
             </h2>
             <div className="mt-4 h-1 w-24 rounded-full bg-gradient-to-r from-[#317873] via-[#AAF0D1] to-transparent" />
           </div>
@@ -808,11 +825,11 @@ dark:text-[#AAF0D1]
         <section className="max-w-6xl mx-auto px-6 py-20">
           <div className="mb-14">
             <p className="inline-flex items-center rounded-full border border-[#B69B83]/25 bg-white/70 px-4 py-2 text-xs sm:text-sm font-medium text-[#7A644F] shadow-sm backdrop-blur dark:border-[#AAF0D1]/20 dark:bg-white/5 dark:text-[#AAF0D1]">
-              Learning Outcomes
+              {t("coursesPage.detail.learningOutcomes")}
             </p>
 
             <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1]">
-              Skills You'll Gain
+              {t("coursesPage.detail.skillsTitle")}
             </h2>
             <div className="mt-4 h-1 w-24 rounded-full bg-gradient-to-r from-[#317873] via-[#AAF0D1] to-transparent" />
           </div>
@@ -865,7 +882,7 @@ dark:text-[#AAF0D1]
       {course?.jobs?.length > 0 && (
         <div className="max-w-6xl mx-auto px-6 py-12">
           <h2 className="mt-2 mb-6 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1]">
-            Career Opportunities
+            {t("coursesPage.detail.careerOpportunities")}
           </h2>
           <div className="mt-4 h-1 w-24 rounded-full bg-gradient-to-r from-[#317873] via-[#AAF0D1] to-transparent" />
 
@@ -892,13 +909,14 @@ dark:text-[#AAF0D1]
       {course?.resources?.length > 0 && (
         <div className="max-w-6xl mx-auto px-6 py-12">
           <h2 className="mt-2 mb-6 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1]">
-            Educational Requirements
+            {t("coursesPage.detail.educationalRequirements")}
           </h2>
           <div className="mt-4 h-1 w-24 rounded-full bg-gradient-to-r from-[#317873] via-[#AAF0D1] to-transparent" />
 
           <p className="text-gray-700 mb-4 mt-4">
-            To master {courseName}, students typically study computer science,
-            statistics, and real-world applications.
+            {t("coursesPage.detail.educationalRequirementsDesc", {
+              name: courseName,
+            })}
           </p>
 
           <ul className="list-disc pl-6 text-[#317873] space-y-2">
@@ -922,12 +940,12 @@ dark:text-[#AAF0D1]
         <section className="max-w-6xl mx-auto px-6 py-16">
           <div className="mb-8">
             <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1]">
-              Learning Resources
+              {t("coursesPage.detail.learningResources")}
             </h2>
             <div className="mt-4 h-1 w-24 rounded-full bg-gradient-to-r from-[#317873] via-[#AAF0D1] to-transparent" />
 
             <p className="mt-2 text-slate-500 mt-4">
-              Useful documentation, tutorials and external references.
+              {t("coursesPage.detail.learningResourcesDesc")}
             </p>
           </div>
 
@@ -1041,7 +1059,9 @@ dark:text-[#AAF0D1]
                   </div>
 
                   <div>
-                    <p className="text-sm text-slate-500">Course Week</p>
+                    <p className="text-sm text-slate-500">
+                      {t("coursesPage.detail.courseWeek")}
+                    </p>
 
                     <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                       {selectedWeek.topic}
@@ -1055,7 +1075,9 @@ dark:text-[#AAF0D1]
                 <div className="flex items-center gap-2 text-[#317873] mb-5">
                   <CalendarDays size={18} />
                   <span className="font-medium">
-                    Week {selectedWeek.week_number}
+                    {t("coursesPage.detail.weekNumber", {
+                      number: selectedWeek.week_number,
+                    })}
                   </span>
                 </div>
 
@@ -1082,7 +1104,7 @@ dark:text-[#AAF0D1]
                 "
                     >
                       <FileText size={18} />
-                      Lecture Material (PDF)
+                      {t("coursesPage.detail.lectureMaterial")}
                     </a>
                   </div>
                 )}

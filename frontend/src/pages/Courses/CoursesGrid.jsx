@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../../services/adminApi";
 
 function CoursesGrid() {
+  const { t } = useTranslation();
   const BASE_URL = API_BASE;
   const PAGE_SIZE = 8;
 
@@ -136,11 +138,11 @@ function CoursesGrid() {
           <section className="pt-[60px]">
             <div className="text-center mb-12">
               <div className="inline-flex items-center rounded-full border border-[#B69B83]/25 bg-white/70 px-4 py-2 text-xs sm:text-sm font-medium text-[#7A644F] shadow-sm backdrop-blur dark:bg-white/5 dark:text-[#AAF0D1]">
-                Academic Courses
+                {t("coursesPage.badge")}
               </div>
 
               <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1]">
-                Courses
+                {t("coursesPage.title")}
               </h2>
 
               <div className="mx-auto mt-4 h-1 w-24 rounded-full bg-gradient-to-r from-[#317873] via-[#AAF0D1] to-transparent" />
@@ -154,7 +156,7 @@ function CoursesGrid() {
                     onClick={() => setShowDropdown(!showDropdown)}
                     className="flex items-center gap-2 bg-white dark:bg-[#091728] text-[#317873] border border-[#317873]/30 text-[#1f6f6a] px-5 py-2.5 rounded-xl bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-200 hover:bg-[#f6fbfa] hover:border-[#317873]/50 hover:shadow-md"
                   >
-                    <span className="font-medium">Explore</span>
+                    <span className="font-medium">{t("coursesPage.explore")}</span>
                     <svg
                       className={`w-4 h-4 transition-transform duration-200 ${
                         showDropdown ? "rotate-180" : ""
@@ -180,7 +182,7 @@ function CoursesGrid() {
                           onClick={showAll}
                           className="rounded-full border border-[#317873]/20 bg-[#f4fbfa] px-4 py-2 text-sm font-medium text-[#317873] transition hover:bg-[#e8f6f4]"
                         >
-                          Show all
+                          {t("coursesPage.showAll")}
                         </button>
                       </div>
 
@@ -188,7 +190,7 @@ function CoursesGrid() {
                         <div className="mb-4 flex items-center gap-2">
                           <span className="h-2 w-2 rounded-full bg-[#317873]"></span>
                           <p className="text-sm font-medium text-slate-700">
-                            Available courses
+                            {t("coursesPage.availableCourses")}
                           </p>
                         </div>
 
@@ -204,17 +206,21 @@ function CoursesGrid() {
                                   }
                                   className="group flex min-h-[56px] items-center rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm text-slate-700 transition-all duration-200 hover:border-[#317873]/40 hover:bg-[#f4fbfa] hover:shadow-sm"
                                   title={
-                                    course.name || course.title || "Course"
+                                    course.name ||
+                                    course.title ||
+                                    t("coursesPage.courseFallback")
                                   }
                                 >
                                   <span className="line-clamp-2 group-hover:text-[#317873]">
-                                    {course.name || course.title || "Course"}
+                                    {course.name ||
+                                      course.title ||
+                                      t("coursesPage.courseFallback")}
                                   </span>
                                 </button>
                               ))
                             ) : (
                               <p className="col-span-2 text-sm text-slate-500">
-                                No courses found
+                                {t("coursesPage.noCoursesFound")}
                               </p>
                             )}
                           </div>
@@ -228,7 +234,7 @@ function CoursesGrid() {
                 <div className="relative w-[300px]">
                   <input
                     type="text"
-                    placeholder="What do you want to learn?"
+                    placeholder={t("coursesPage.searchPlaceholder")}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className=" bg-white dark:bg-[#091728] text-[#317873] w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#317873]"
@@ -260,7 +266,7 @@ function CoursesGrid() {
                   />
 
                   <p className="text-sm text-gray-500">
-                    <strong>Code:</strong> {course.code}
+                    <strong>{t("coursesPage.code")}</strong> {course.code}
                   </p>
 
                   <p className="text-base font-semibold text-[#317873] mt-1 leading-snug">
@@ -268,19 +274,20 @@ function CoursesGrid() {
                   </p>
 
                   <p className="text-sm text-gray-600 mt-1">
-                    <strong>Credits:</strong> {course.credits} ECTS
+                    <strong>{t("coursesPage.credits")}</strong>{" "}
+                    {course.credits} ECTS
                   </p>
 
                   <p className="text-sm text-gray-600">
-                    <strong>Teacher:</strong>{" "}
-                    {course.teachers?.[0]?.name || "No teacher"}
+                    <strong>{t("coursesPage.teacher")}</strong>{" "}
+                    {course.teachers?.[0]?.name || t("coursesPage.noTeacher")}
                   </p>
 
                   <Link
                     to={`/course_detail/${course.code}`}
                     className="inline-block mt-3 px-4 py-2 text-sm rounded-full bg-gradient-to-r from-[#317873] to-[#45a088] text-white font-semibold shadow-md hover:brightness-110 transition"
                   >
-                    Course details
+                    {t("coursesPage.courseDetails")}
                   </Link>
                 </div>
               ))}
@@ -289,7 +296,10 @@ function CoursesGrid() {
             {/* 📄 PAGINATION */}
             <div className="mt-2 flex flex-col items-center gap-4 pb-12">
               <div className="text-sm text-slate-600">
-                Page {currentPage} of {totalPages}
+                {t("coursesPage.pageOf", {
+                  current: currentPage,
+                  total: totalPages,
+                })}
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-2">
@@ -299,7 +309,7 @@ function CoursesGrid() {
                   disabled={currentPage === 1}
                   className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Previous
+                  {t("coursesPage.previous")}
                 </button>
 
                 {getPaginationItems().map((item, index) =>
@@ -332,12 +342,12 @@ function CoursesGrid() {
                   disabled={currentPage === totalPages}
                   className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Next
+                  {t("coursesPage.next")}
                 </button>
               </div>
 
               <div className="text-xs text-slate-500">
-                Total courses: {totalCount}
+                {t("coursesPage.totalCourses", { count: totalCount })}
               </div>
             </div>
           </div>

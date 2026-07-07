@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../../services/adminApi";
 
 function TeachersGrid() {
+  const { t } = useTranslation();
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -56,11 +58,11 @@ function TeachersGrid() {
       <div className="container-custom px-4">
         <div className="text-center mb-12">
           <div className="inline-flex items-center rounded-full border border-[#B69B83]/25 bg-white/70 px-4 py-2 text-xs sm:text-sm font-medium text-[#7A644F] shadow-sm backdrop-blur dark:bg-white/5 dark:text-[#AAF0D1]">
-            Academic Staff
+            {t("teachersPage.badge")}
           </div>
 
           <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1]">
-            Our Teachers
+            {t("teachersPage.title")}
           </h2>
 
           <div className="mx-auto mt-4 h-1 w-24 rounded-full bg-gradient-to-r from-[#317873] via-[#AAF0D1] to-transparent" />
@@ -68,11 +70,11 @@ function TeachersGrid() {
 
         {loading ? (
           <div className="py-16 text-center text-sm sm:text-base text-slate-500 dark:text-slate-300">
-            Loading...
+            {t("teachersPage.loading")}
           </div>
         ) : teachers.length === 0 ? (
           <div className="py-16 text-center text-sm sm:text-base text-slate-500 dark:text-slate-300">
-            No teachers found.
+            {t("teachersPage.noTeachers")}
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -117,7 +119,7 @@ function TeachersGrid() {
                     <div className="mt-4">
                       <p className="text-xs sm:text-sm leading-6 text-slate-600 dark:text-slate-300">
                         <span className="font-semibold text-[#317873] dark:text-[#AAF0D1]">
-                          Area of interest:
+                          {t("teachersPage.areaOfInterest")}
                         </span>{" "}
                         {teacher.interest_areas
                           .map((area) => area.title)
@@ -131,7 +133,7 @@ function TeachersGrid() {
                     state={{ teacher }}
                     className="mt-6 inline-flex items-center justify-center rounded-full border border-[#317873] px-5 py-2.5 text-sm font-semibold text-[#317873] transition-all duration-300 hover:bg-[#317873] hover:text-white dark:border-[#AAF0D1] dark:text-[#AAF0D1] dark:hover:bg-[#AAF0D1] dark:hover:text-[#081120]"
                   >
-                    View Profile
+                    {t("teachersPage.viewProfile")}
                   </Link>
                 </div>
               </div>

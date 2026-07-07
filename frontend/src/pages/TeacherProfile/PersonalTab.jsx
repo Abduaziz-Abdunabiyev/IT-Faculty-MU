@@ -1,6 +1,10 @@
+import { useTranslation } from "react-i18next";
+
 function PersonalTab({ teacher, interestAreas, workExperiences, timetable }) {
+  const { t } = useTranslation();
+
   if (!teacher) {
-    return <div>Loading...</div>;
+    return <div>{t("profile.loading")}</div>;
   }
 
   // 🔵 Skills array
@@ -27,7 +31,7 @@ function PersonalTab({ teacher, interestAreas, workExperiences, timetable }) {
           dark:text-white
         "
       >
-        Personal Profile
+        {t("profile.personal.title")}
       </h3>
 
       <div className="space-y-10">
@@ -43,7 +47,7 @@ function PersonalTab({ teacher, interestAreas, workExperiences, timetable }) {
                 mb-3
               "
             >
-              Biography
+              {t("profile.personal.biography")}
             </h5>
 
             <p
@@ -70,7 +74,7 @@ function PersonalTab({ teacher, interestAreas, workExperiences, timetable }) {
                 mb-3
               "
             >
-              Areas of Expertise
+              {t("profile.personal.areasOfExpertise")}
             </h5>
 
             <div className="flex flex-wrap gap-3">
@@ -107,7 +111,7 @@ function PersonalTab({ teacher, interestAreas, workExperiences, timetable }) {
                 mb-4
               "
             >
-              Work Experience
+              {t("profile.personal.workExperience")}
             </h5>
 
             <ul className="space-y-4">
@@ -129,7 +133,7 @@ function PersonalTab({ teacher, interestAreas, workExperiences, timetable }) {
 
                     {" — "}
 
-                    {work.end_year ? work.end_year : "Present"}
+                    {work.end_year ? work.end_year : t("profile.personal.present")}
                   </p>
                 </li>
               ))}
@@ -149,7 +153,7 @@ function PersonalTab({ teacher, interestAreas, workExperiences, timetable }) {
                 mb-4
               "
             >
-              Skills
+              {t("profile.personal.skills")}
             </h5>
 
             <div
@@ -185,7 +189,7 @@ function PersonalTab({ teacher, interestAreas, workExperiences, timetable }) {
                 mb-4
               "
             >
-              Hobby & Interests
+              {t("profile.personal.hobbies")}
             </h5>
 
             <div
@@ -231,7 +235,7 @@ function PersonalTab({ teacher, interestAreas, workExperiences, timetable }) {
                 mb-4
               "
             >
-              Timetable
+              {t("profile.personal.timetable")}
             </h5>
 
             <div className="overflow-x-auto">
@@ -244,13 +248,21 @@ function PersonalTab({ teacher, interestAreas, workExperiences, timetable }) {
               >
                 <thead className="bg-[#B69B83]/20">
                   <tr>
-                    <th className="px-4 py-2 border">Course</th>
+                    <th className="px-4 py-2 border">
+                      {t("profile.personal.table.course")}
+                    </th>
 
-                    <th className="px-4 py-2 border">Day</th>
+                    <th className="px-4 py-2 border">
+                      {t("profile.personal.table.day")}
+                    </th>
 
-                    <th className="px-4 py-2 border">Time</th>
+                    <th className="px-4 py-2 border">
+                      {t("profile.personal.table.time")}
+                    </th>
 
-                    <th className="px-4 py-2 border">Room</th>
+                    <th className="px-4 py-2 border">
+                      {t("profile.personal.table.room")}
+                    </th>
                   </tr>
                 </thead>
 

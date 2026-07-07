@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -10,6 +11,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 function HistorySection() {
+  const { t } = useTranslation();
   const [department, setDepartment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [numPages, setNumPages] = useState(null);
@@ -48,7 +50,7 @@ function HistorySection() {
     return (
       <section className="container-custom py-20">
         <p className="text-center text-slate-500 dark:text-slate-300">
-          Loading history...
+          {t("about.history.loading")}
         </p>
       </section>
     );
@@ -58,7 +60,7 @@ function HistorySection() {
     return (
       <section className="container-custom py-20">
         <p className="text-center text-slate-500 dark:text-slate-300">
-          Department not found.
+          {t("about.history.notFound")}
         </p>
       </section>
     );
@@ -69,11 +71,11 @@ function HistorySection() {
       <div className="container-custom px-4">
         <div className="text-center">
           <div className="inline-flex items-center rounded-full border border-[#B69B83]/20 bg-[#F8F8F8] dark:bg-white/5 px-5 py-2 text-sm font-medium text-[#8B7355] dark:text-[#AAF0D1] shadow-sm">
-            Academic Legacy
+            {t("about.history.badge")}
           </div>
 
           <h1 className="mt-5 text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-[#091728] dark:text-white">
-            Department History
+            {t("about.history.title")}
           </h1>
 
           <div className="mx-auto mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-[#317873] via-[#AAF0D1] to-transparent" />
@@ -87,12 +89,12 @@ function HistorySection() {
                 onLoadSuccess={onLoadSuccess}
                 loading={
                   <div className="py-16 text-center text-slate-500 dark:text-slate-300">
-                    Loading PDF...
+                    {t("about.history.loadingPdf")}
                   </div>
                 }
                 error={
                   <div className="py-16 text-center text-red-500">
-                    Failed to load PDF file.
+                    {t("about.history.pdfError")}
                   </div>
                 }
               >
@@ -112,7 +114,7 @@ function HistorySection() {
         ) : (
           <div className="rounded-3xl border border-dashed border-slate-300 bg-white dark:bg-white/5 py-16 text-center shadow-sm">
             <p className="text-slate-500 dark:text-slate-300">
-              No history PDF uploaded yet.
+              {t("about.history.noPdf")}
             </p>
           </div>
         )}

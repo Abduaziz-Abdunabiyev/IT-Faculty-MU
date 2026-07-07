@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function OfficeHourModal({ officeHour, onSave, onClose }) {
+  const { t } = useTranslation();
+
   const [day, setDay] = useState(officeHour?.day || "monday");
 
   const [startTime, setStartTime] = useState(officeHour?.start_time || "");
@@ -19,7 +22,9 @@ export default function OfficeHourModal({ officeHour, onSave, onClose }) {
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-[400px]">
         <h2 className="text-xl font-semibold mb-5">
-          {officeHour ? "Edit Office Hour" : "Add Office Hour"}
+          {officeHour
+            ? t("profile.officeHours.editTitle")
+            : t("profile.officeHours.addTitle")}
         </h2>
 
         <div className="space-y-4">
@@ -28,11 +33,21 @@ export default function OfficeHourModal({ officeHour, onSave, onClose }) {
             onChange={(e) => setDay(e.target.value)}
             className="w-full border rounded-xl p-3"
           >
-            <option value="monday">Monday</option>
-            <option value="tuesday">Tuesday</option>
-            <option value="wednesday">Wednesday</option>
-            <option value="thursday">Thursday</option>
-            <option value="friday">Friday</option>
+            <option value="monday">
+              {t("profile.officeHours.days.monday")}
+            </option>
+            <option value="tuesday">
+              {t("profile.officeHours.days.tuesday")}
+            </option>
+            <option value="wednesday">
+              {t("profile.officeHours.days.wednesday")}
+            </option>
+            <option value="thursday">
+              {t("profile.officeHours.days.thursday")}
+            </option>
+            <option value="friday">
+              {t("profile.officeHours.days.friday")}
+            </option>
           </select>
 
           <input
@@ -51,7 +66,7 @@ export default function OfficeHourModal({ officeHour, onSave, onClose }) {
 
           <div className="flex justify-end gap-2">
             <button onClick={onClose} className="px-4 py-2 border rounded-xl">
-              Cancel
+              {t("profile.officeHours.cancel")}
             </button>
 
             <button
@@ -64,7 +79,7 @@ export default function OfficeHourModal({ officeHour, onSave, onClose }) {
                 text-white
               "
             >
-              Save
+              {t("profile.officeHours.save")}
             </button>
           </div>
         </div>

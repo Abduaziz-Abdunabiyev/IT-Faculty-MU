@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../../services/adminApi";
 
 function AcademicSection() {
+  const { t } = useTranslation();
   const [lecturers, setLecturers] = useState(0);
   const [instructors, setInstructors] = useState(0);
   const [phdCount, setPhdCount] = useState(0);
@@ -64,7 +66,7 @@ function AcademicSection() {
 
           {/* Badge */}
           <div className="relative z-10 inline-flex items-center rounded-full border border-[#B69B83]/25 bg-[#F7F8FA] px-4 py-2 text-xs sm:text-sm font-medium text-[#7A644F] shadow-sm dark:bg-white/5 dark:text-[#AAF0D1]">
-            Academic Excellence
+            {t("about.academic.badge")}
           </div>
 
           {/* Title */}
@@ -84,7 +86,7 @@ function AcademicSection() {
             animate-slide-left
           "
           >
-            Academic Achievements
+            {t("about.academic.title")}
           </h2>
 
           <div className="relative z-10 mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-[#317873] via-[#AAF0D1] to-transparent" />
@@ -112,19 +114,17 @@ function AcademicSection() {
               font-noto
             "
             >
-              The IT Department is proud to host a dynamic team of
+              {t("about.academic.p1.lead")}
               <span className="font-semibold text-[#317873] dark:text-[#AAF0D1]">
                 {" "}
-                {totalTeachers} skilled educators
+                {t("about.academic.p1.educators", { value: totalTeachers })}
               </span>
-              , including
+              {t("about.academic.p1.including")}
               <span className="font-semibold text-[#317873] dark:text-[#AAF0D1]">
                 {" "}
-                {phdCount} PhD holders
+                {t("about.academic.p1.phd", { value: phdCount })}
               </span>
-              , each contributing to a future-oriented academic environment
-              where innovation, research, and practical skill-building are
-              central pillars.
+              {t("about.academic.p1.tail")}
             </p>
 
             {/* Paragraph 2 */}
@@ -140,19 +140,21 @@ function AcademicSection() {
               font-noto
             "
             >
-              Among them,
+              {t("about.academic.p2.among")}
               <span className="font-semibold text-[#317873] dark:text-[#AAF0D1]">
                 {" "}
-                {lecturers} lecturers
+                {t("about.academic.p2.lecturers", { value: lecturers })}
               </span>
-              focus on <em>Latin Language and Medical Terminology</em>, while
+              {t("about.academic.p2.focus")}
+              <em>{t("about.academic.p2.latin")}</em>
+              {t("about.academic.p2.while")}
               <span className="font-semibold text-[#317873] dark:text-[#AAF0D1]">
                 {" "}
-                {instructors} instructors
+                {t("about.academic.p2.instructors", { value: instructors })}
               </span>
-              specialize in <em>English for Medical Purposes</em> —
-              strengthening global communication and interdisciplinary
-              collaboration in healthcare technologies.
+              {t("about.academic.p2.specialize")}
+              <em>{t("about.academic.p2.english")}</em>
+              {t("about.academic.p2.strengthen")}
             </p>
 
             {/* Paragraph 3 */}
@@ -168,10 +170,7 @@ function AcademicSection() {
               font-noto
             "
             >
-              Our educators regularly publish in reputable journals, contribute
-              to scientific conferences, and mentor students on real-world IT
-              projects such as software systems, AI tools, and data-driven
-              solutions.
+              {t("about.academic.p3")}
             </p>
 
             {/* Paragraph 4 */}
@@ -187,8 +186,7 @@ function AcademicSection() {
               font-noto
             "
             >
-              Together, we nurture the next generation of digital leaders who
-              will shape tomorrow's technological landscape.
+              {t("about.academic.p4")}
             </p>
           </div>
         </div>

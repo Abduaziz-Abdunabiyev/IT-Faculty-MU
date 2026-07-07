@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import ResearchCard from "../components/ResearchCard";
 import { API_BASE } from "../services/adminApi";
 
 const API_BASE_URL = API_BASE;
 
 export default function ResearchPage() {
+  const { t } = useTranslation();
   const [researches, setResearches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedResearch, setSelectedResearch] = useState(null);
@@ -99,19 +101,19 @@ export default function ResearchPage() {
                   to="/"
                   className="text-[#AAF0D1] transition-all duration-200 hover:text-white"
                 >
-                  Home
+                  {t("researchPage.breadcrumbHome")}
                 </Link>
               </li>
               <li>
                 <span className="mx-2 text-slate-400">›</span>
               </li>
-              <li className="text-slate-300">Research</li>
+              <li className="text-slate-300">{t("researchPage.title")}</li>
             </ol>
           </nav>
 
           <div className="relative">
             <h1 className="max-w-4xl text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
-              Research
+              {t("researchPage.title")}
             </h1>
 
             <div className="mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-[#AAF0D1] via-[#317873] to-transparent" />
@@ -125,7 +127,7 @@ export default function ResearchPage() {
             <div className="flex flex-col gap-4 xl:flex-row">
               <input
                 type="text"
-                placeholder="Search research projects..."
+                placeholder={t("researchPage.searchPlaceholder")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="h-14 flex-1 rounded-2xl border border-slate-200 bg-white px-5 text-sm outline-none transition focus:border-[#317873] focus:ring-2 focus:ring-[#317873]/10 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
@@ -136,7 +138,7 @@ export default function ResearchPage() {
                 onChange={(e) => setTeacherFilter(e.target.value)}
                 className="h-14 min-w-[240px] rounded-2xl border border-slate-200 bg-white px-5 text-sm outline-none transition focus:border-[#317873] focus:ring-2 focus:ring-[#317873]/10 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
               >
-                <option value="all">All Teachers</option>
+                <option value="all">{t("researchPage.allTeachers")}</option>
                 {teachers
                   .filter((item) => item !== "all")
                   .map(([id, name]) => (
@@ -151,7 +153,7 @@ export default function ResearchPage() {
                 onChange={(e) => setYearFilter(e.target.value)}
                 className="h-14 min-w-[220px] rounded-2xl border border-slate-200 bg-white px-5 text-sm outline-none transition focus:border-[#317873] focus:ring-2 focus:ring-[#317873]/10 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
               >
-                <option value="all">All Years</option>
+                <option value="all">{t("researchPage.allYears")}</option>
                 {years
                   .filter((item) => item !== "all")
                   .map((year) => (
@@ -166,7 +168,7 @@ export default function ResearchPage() {
           <section className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-10">
             <div className="rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
               <p className="mb-2 text-sm text-slate-500 dark:text-slate-400">
-                Total Research
+                {t("researchPage.totalResearch")}
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#091728] dark:text-white">
                 {researches.length}
@@ -175,7 +177,7 @@ export default function ResearchPage() {
 
             <div className="rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
               <p className="mb-2 text-sm text-slate-500 dark:text-slate-400">
-                Filtered Results
+                {t("researchPage.filteredResults")}
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#091728] dark:text-white">
                 {filteredResearches.length}
@@ -184,7 +186,7 @@ export default function ResearchPage() {
 
             <div className="rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
               <p className="mb-2 text-sm text-slate-500 dark:text-slate-400">
-                Ongoing Projects
+                {t("researchPage.ongoingProjects")}
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#091728] dark:text-white">
                 {activeCount}
@@ -194,7 +196,7 @@ export default function ResearchPage() {
 
           {loading ? (
             <div className="py-20 text-center text-slate-500 dark:text-slate-300">
-              Loading research...
+              {t("researchPage.loading")}
             </div>
           ) : filteredResearches.length > 0 ? (
             <section className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
@@ -208,7 +210,7 @@ export default function ResearchPage() {
             </section>
           ) : (
             <div className="rounded-3xl border border-dashed border-slate-300 bg-white/80 p-16 text-center text-slate-500 shadow-[0_18px_50px_rgba(15,23,42,0.04)] dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
-              No research projects found.
+              {t("researchPage.noResearch")}
             </div>
           )}
         </div>
@@ -240,7 +242,7 @@ export default function ResearchPage() {
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center text-slate-400">
-                    No Preview
+                    {t("researchPage.noPreview")}
                   </div>
                 )}
               </div>
@@ -255,7 +257,7 @@ export default function ResearchPage() {
                 </h2>
 
                 <p className="mb-5 text-sm sm:text-base text-slate-500 dark:text-slate-300">
-                  Period: {selectedResearch.period}
+                  {t("researchPage.period")} {selectedResearch.period}
                 </p>
 
                 <div className="mb-8 flex flex-wrap gap-3">
@@ -264,18 +266,19 @@ export default function ResearchPage() {
                   </span>
 
                   <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700 dark:bg-blue-500/10 dark:text-blue-300">
-                    Start: {selectedResearch.start_year}
+                    {t("researchPage.start")} {selectedResearch.start_year}
                   </span>
 
                   {selectedResearch.end_year && (
                     <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
-                      End: {selectedResearch.end_year}
+                      {t("researchPage.end")} {selectedResearch.end_year}
                     </span>
                   )}
                 </div>
 
                 <p className="text-slate-600 leading-8 dark:text-slate-300">
-                  {selectedResearch.description || "No description available."}
+                  {selectedResearch.description ||
+                    t("researchPage.noDescription")}
                 </p>
               </div>
             </div>

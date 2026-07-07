@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Plus, Trash2 } from "lucide-react";
 
 import { buildPayload, extractItems, request } from "../../services/adminApi";
@@ -15,6 +16,7 @@ import {
 } from "../../utils/resourceFormHelpers";
 
 export default function TeacherCourseForm() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -146,7 +148,7 @@ export default function TeacherCourseForm() {
       navigate(-1);
     } catch (err) {
       console.error(err);
-      setError(err.message || "Save failed");
+      setError(err.message || t("profile.courseForm.saveFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -175,7 +177,7 @@ export default function TeacherCourseForm() {
           onChange={(e) => handleChange(field.name, e.target.value)}
           className="w-full rounded-xl border border-slate-300 p-3"
         >
-          <option value="">Select...</option>
+          <option value="">{t("profile.courseForm.select")}</option>
 
           {(field.options || []).map((option) => (
             <option key={option.value} value={option.value}>
@@ -224,7 +226,9 @@ export default function TeacherCourseForm() {
   }
 
   if (loading) {
-    return <div className="py-20 text-center">Loading...</div>;
+    return (
+      <div className="py-20 text-center">{t("profile.courseForm.loading")}</div>
+    );
   }
 
   return (
@@ -234,11 +238,13 @@ export default function TeacherCourseForm() {
         <div className="mb-8 flex items-center justify-between border-b pb-6">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">
-              {isEdit ? "Edit Course" : "Create New Course"}
+              {isEdit
+                ? t("profile.courseForm.editTitle")
+                : t("profile.courseForm.createTitle")}
             </h1>
 
             <p className="mt-2 text-slate-500">
-              Fill in the course information below.
+              {t("profile.courseForm.subtitle")}
             </p>
           </div>
 
@@ -247,7 +253,7 @@ export default function TeacherCourseForm() {
             onClick={() => navigate(-1)}
             className="rounded-xl border border-slate-300 px-5 py-3 hover:bg-slate-100"
           >
-            Cancel
+            {t("profile.courseForm.cancel")}
           </button>
         </div>
 
@@ -283,7 +289,7 @@ export default function TeacherCourseForm() {
               onClick={() => navigate(-1)}
               className="rounded-xl border border-slate-300 px-6 py-3"
             >
-              Cancel
+              {t("profile.courseForm.cancel")}
             </button>
 
             <button
@@ -292,10 +298,10 @@ export default function TeacherCourseForm() {
               className="rounded-xl bg-[#317873] px-8 py-3 font-medium text-white hover:bg-[#285f5b]"
             >
               {submitting
-                ? "Saving..."
+                ? t("profile.courseForm.saving")
                 : isEdit
-                  ? "Update Course"
-                  : "Create Course"}
+                  ? t("profile.courseForm.update")
+                  : t("profile.courseForm.create")}
             </button>
           </div>
         </form>

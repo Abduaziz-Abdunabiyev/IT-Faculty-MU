@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 
 import { motion } from "framer-motion";
@@ -16,6 +17,7 @@ import {
 } from "lucide-react";
 
 function PublicationDetail() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -65,7 +67,7 @@ function PublicationDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#091728]">
         <div className="animate-pulse text-[#317873] text-lg">
-          Loading publication...
+          {t("profile.publicationDetail.loading")}
         </div>
       </div>
     );
@@ -89,11 +91,11 @@ function PublicationDetail() {
   // DELETE
   const handleDelete = async () => {
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "This publication will be deleted!",
+      title: t("profile.publicationDetail.deleteConfirmTitle"),
+      text: t("profile.publicationDetail.deleteConfirmText"),
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: t("profile.publicationDetail.deleteConfirmButton"),
     });
 
     if (!result.isConfirmed) return;
@@ -112,14 +114,14 @@ function PublicationDetail() {
       console.log(error);
       toast.fire({
         icon: "error",
-        title: `Delete failed (${res.status})`,
+        title: `${t("profile.publicationDetail.deleteFailed")} (${res.status})`,
       });
       return;
     }
 
     toast.fire({
       icon: "success",
-      title: "Deleted",
+      title: t("profile.publicationDetail.deleted"),
     });
 
     goBack();
@@ -152,11 +154,17 @@ function PublicationDetail() {
     setLoading(false);
 
     if (!res.ok) {
-      toast.fire({ icon: "error", title: "Update failed" });
+      toast.fire({
+        icon: "error",
+        title: t("profile.publicationDetail.updateFailed"),
+      });
       return;
     }
 
-    toast.fire({ icon: "success", title: "Updated!" });
+    toast.fire({
+      icon: "success",
+      title: t("profile.publicationDetail.updated"),
+    });
 
     setIsEditing(false);
     setPub(data);
@@ -173,11 +181,11 @@ function PublicationDetail() {
           onClick={() => navigate("/")}
           className="cursor-pointer hover:underline"
         >
-          Home
+          {t("profile.publicationDetail.home")}
         </span>
         <span>›</span>
         <span onClick={goBack} className="cursor-pointer hover:underline">
-          Teacher Profile
+          {t("profile.publicationDetail.teacherProfile")}
         </span>
         <span>›</span>
         <span className="text-gray-500 font-medium truncate max-w-[200px]">
@@ -201,7 +209,7 @@ function PublicationDetail() {
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800"
                 >
                   <Pencil size={16} />
-                  Edit
+                  {t("profile.publicationDetail.edit")}
                 </button>
 
                 <button
@@ -209,7 +217,7 @@ function PublicationDetail() {
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-red-500 text-red-500 hover:bg-red-500/10"
                 >
                   <Trash2 size={16} />
-                  Delete
+                  {t("profile.publicationDetail.delete")}
                 </button>
               </div>
             )}
@@ -236,7 +244,7 @@ function PublicationDetail() {
           <div className="p-8 md:p-12">
             <div className="flex flex-wrap gap-3 mb-6">
               <span className="px-3 py-1 rounded-full bg-[#317873]/10 text-[#317873] text-sm font-medium">
-                Publication
+                {t("profile.publicationDetail.tag")}
               </span>
 
               <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-sm font-medium">
@@ -270,12 +278,12 @@ function PublicationDetail() {
                 </div>
 
                 <h2 className="text-2xl font-bold text-[#091728] dark:text-white">
-                  Abstract
+                  {t("profile.publicationDetail.abstract")}
                 </h2>
               </div>
 
               <p className="leading-8 text-slate-700 dark:text-slate-300">
-                {pub.description || "No description provided."}
+                {pub.description || t("profile.publicationDetail.noDescription")}
               </p>
             </div>
 
@@ -285,11 +293,11 @@ function PublicationDetail() {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
                   <div>
                     <h3 className="text-xl font-semibold text-[#091728] dark:text-white">
-                      Publication File
+                      {t("profile.publicationDetail.fileTitle")}
                     </h3>
 
                     <p className="mt-2 text-slate-500 dark:text-slate-400">
-                      Download or preview the original publication PDF.
+                      {t("profile.publicationDetail.fileSubtitle")}
                     </p>
                   </div>
 
@@ -304,7 +312,7 @@ function PublicationDetail() {
                     className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-[#317873] text-white font-medium hover:scale-105 transition"
                   >
                     <Download size={20} />
-                    Download PDF
+                    {t("profile.publicationDetail.download")}
                   </a>
                 </div>
               </div>
@@ -318,7 +326,7 @@ function PublicationDetail() {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="w-full max-w-2xl rounded-3xl bg-white dark:bg-[#112240] p-8 shadow-2xl">
             <h2 className="text-2xl font-bold mb-6 dark:text-white">
-              Edit Publication
+              {t("profile.publicationDetail.editTitle")}
             </h2>
 
             <input
@@ -389,7 +397,7 @@ function PublicationDetail() {
                 onClick={() => setIsEditing(false)}
                 className="px-5 py-2 rounded-xl border"
               >
-                Cancel
+                {t("profile.publicationDetail.cancel")}
               </button>
 
               <button
@@ -397,7 +405,9 @@ function PublicationDetail() {
                 disabled={loading}
                 className="px-5 py-2 rounded-xl bg-[#317873] text-white"
               >
-                {loading ? "Saving..." : "Save"}
+                {loading
+                  ? t("profile.publicationDetail.saving")
+                  : t("profile.publicationDetail.save")}
               </button>
             </div>
           </div>

@@ -1,10 +1,16 @@
+import { useTranslation } from "react-i18next";
+
 function EducationTab({ educations }) {
+  const { t } = useTranslation();
+
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-6">Education Background</h2>
+      <h2 className="text-xl font-semibold mb-6">
+        {t("profile.education.title")}
+      </h2>
 
       {educations.length === 0 && (
-        <p className="text-gray-500">No education records found.</p>
+        <p className="text-gray-500">{t("profile.education.empty")}</p>
       )}
 
       <div className="space-y-6">
@@ -20,7 +26,7 @@ function EducationTab({ educations }) {
             <p className="text-gray-700 dark:text-white">{edu.institution}</p>
 
             <p className="text-sm text-gray-500 dark:text-white">
-              {edu.start_year} — {edu.end_year || "Present"}
+              {edu.start_year} — {edu.end_year || t("profile.education.present")}
             </p>
           </div>
         ))}

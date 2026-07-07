@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Eye, EyeOff } from "lucide-react";
 import api from "../lib/api";
 
 function ChangePassword() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const currentUser = useMemo(() => {
     const userStr = localStorage.getItem("user");
@@ -61,7 +63,7 @@ function ChangePassword() {
       const res = await api.post("/accounts/change-password/", payload);
       const data = res.data;
 
-      setSuccess(data.detail || "Password muvaffaqiyatli o‘zgartirildi.");
+      setSuccess(data.detail || t("changePassword.successDefault"));
 
       if (currentUser) {
         const updatedUser = {
@@ -74,8 +76,17 @@ function ChangePassword() {
       setTimeout(() => {
         if (currentUser?.role === "admin" || currentUser?.is_staff) {
           navigate("/admin-dashboard");
-        } else if (currentUser?.role === "teacher") {
-          navigate("/teacher-dashboard");
+        } else if (
+          currentUser?.role === "teacher" ||
+          currentUser?.teacher_id
+        ) {
+          // The teacher's dashboard is their own profile page. There is no
+          // "/teacher-dashboard" route, so send them to /teachers/:id.
+          navigate(
+            currentUser?.teacher_id
+              ? `/teachers/${currentUser.teacher_id}`
+              : "/teachers",
+          );
         } else {
           navigate("/");
         }
@@ -89,7 +100,7 @@ function ChangePassword() {
         err.response?.data?.old_password?.[0] ||
         err.response?.data?.new_password?.[0] ||
         err.response?.data?.confirm_password?.[0] ||
-        "Password o‘zgartirishda xatolik";
+        t("changePassword.errorDefault");
 
       setError(message);
     } finally {
@@ -104,20 +115,22 @@ function ChangePassword() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-[#317873] via-[#255c57] to-[#173c38] px-4">
       <div className="w-full max-w-lg rounded-2xl bg-white p-8 shadow-2xl">
         <h2 className="mb-2 text-center text-3xl font-bold text-[#317873]">
-          {isFirstLogin ? "Set New Password" : "Change Password"}
+          {isFirstLogin
+            ? t("changePassword.setTitle")
+            : t("changePassword.changeTitle")}
         </h2>
 
         <p className="mb-6 text-center text-sm text-slate-500">
           {isFirstLogin
-            ? "First login uchun yangi parol o‘rnating."
-            : "Eski parol va yangi parolni kiriting."}
+            ? t("changePassword.firstLoginSubtitle")
+            : t("changePassword.changeSubtitle")}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isFirstLogin && (
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">
-                Old password
+                {t("changePassword.oldPassword")}
               </label>
               <div className="relative">
                 <input
@@ -125,7 +138,7 @@ function ChangePassword() {
                   name="old_password"
                   value={formData.old_password}
                   onChange={handleChange}
-                  placeholder="Old password"
+                  placeholder={t("changePassword.oldPassword")}
                   className={inputClass}
                 />
                 <button
@@ -134,8 +147,8 @@ function ChangePassword() {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
                   aria-label={
                     showPasswords.old_password
-                      ? "Hide old password"
-                      : "Show old password"
+                      ? t("changePassword.hideOldPassword")
+                      : t("changePassword.showOldPassword")
                   }
                 >
                   {showPasswords.old_password ? (
@@ -150,7 +163,7 @@ function ChangePassword() {
 
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              New password
+              {t("changePassword.newPassword")}
             </label>
             <div className="relative">
               <input
@@ -158,7 +171,7 @@ function ChangePassword() {
                 name="new_password"
                 value={formData.new_password}
                 onChange={handleChange}
-                placeholder="New password"
+                placeholder={t("changePassword.newPassword")}
                 className={inputClass}
               />
               <button
@@ -167,8 +180,8 @@ function ChangePassword() {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
                 aria-label={
                   showPasswords.new_password
-                    ? "Hide new password"
-                    : "Show new password"
+                    ? t("changePassword.hideNewPassword")
+                    : t("changePassword.showNewPassword")
                 }
               >
                 {showPasswords.new_password ? (
@@ -182,7 +195,7 @@ function ChangePassword() {
 
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              Confirm password
+              {t("changePassword.confirmPassword")}
             </label>
             <div className="relative">
               <input
@@ -190,7 +203,7 @@ function ChangePassword() {
                 name="confirm_password"
                 value={formData.confirm_password}
                 onChange={handleChange}
-                placeholder="Confirm password"
+                placeholder={t("changePassword.confirmPassword")}
                 className={inputClass}
               />
               <button
@@ -199,8 +212,8 @@ function ChangePassword() {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
                 aria-label={
                   showPasswords.confirm_password
-                    ? "Hide confirm password"
-                    : "Show confirm password"
+                    ? t("changePassword.hideConfirmPassword")
+                    : t("changePassword.showConfirmPassword")
                 }
               >
                 {showPasswords.confirm_password ? (
@@ -229,7 +242,7 @@ function ChangePassword() {
             disabled={loading}
             className="w-full rounded-lg bg-[#317873] py-3 font-medium text-white transition hover:bg-[#255c57] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? "Saving..." : "Update Password"}
+            {loading ? t("changePassword.saving") : t("changePassword.submit")}
           </button>
         </form>
       </div>

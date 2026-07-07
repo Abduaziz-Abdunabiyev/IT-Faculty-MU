@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../../services/adminApi";
 
 function DepartmentHeadSection() {
+  const { t } = useTranslation();
   const [head, setHead] = useState(null);
 
   useEffect(() => {
@@ -42,19 +44,17 @@ function DepartmentHeadSection() {
           {/* Text */}
           <div className="rounded-3xl border border-slate-200/70 bg-white/80 p-6 sm:p-8 md:p-10 shadow-[0_20px_60px_rgba(15,23,42,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
             <div className="inline-flex items-center rounded-full border border-[#B69B83]/25 bg-[#F7F8FA] px-4 py-2 text-xs sm:text-sm font-medium text-[#7A644F] dark:bg-white/5 dark:text-[#AAF0D1]">
-              Department Leadership
+              {t("about.head.badge")}
             </div>
 
             <h2 className="mt-5 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1] leading-tight">
-              About the Head of Department
+              {t("about.head.title")}
             </h2>
 
             <div className="mt-4 h-1 w-20 rounded-full bg-gradient-to-r from-[#317873] to-[#AAF0D1]" />
 
             <p className="mt-6 text-sm sm:text-base md:text-[17px] leading-7 sm:leading-8 text-slate-600 dark:text-slate-300">
-              {head.bio
-                ? head.bio
-                : "Under the leadership of the head of the department, recent years have witnessed an increase in scientific publications, international conferences, startup projects, and advanced IT initiatives."}
+              {head.bio ? head.bio : t("about.head.defaultBio")}
             </p>
           </div>
         </div>

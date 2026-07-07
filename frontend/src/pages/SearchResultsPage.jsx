@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../services/adminApi";
 
 function SearchResultsPage() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const query = searchParams.get("search") || "";
 
@@ -31,10 +33,12 @@ function SearchResultsPage() {
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <h1 className="mb-8 text-3xl font-bold">Search results for "{query}"</h1>
+      <h1 className="mb-8 text-3xl font-bold">
+        {t("searchPage.resultsFor")} "{query}"
+      </h1>
 
       <section className="mb-10">
-        <h2 className="mb-4 text-2xl font-semibold">Teachers</h2>
+        <h2 className="mb-4 text-2xl font-semibold">{t("searchPage.teachers")}</h2>
         <div className="grid gap-4 md:grid-cols-2">
           {results.teachers.length > 0 ? (
             results.teachers.map((teacher) => (
@@ -50,13 +54,13 @@ function SearchResultsPage() {
               </Link>
             ))
           ) : (
-            <p className="text-gray-500">No teachers found.</p>
+            <p className="text-gray-500">{t("searchPage.noTeachers")}</p>
           )}
         </div>
       </section>
 
       <section className="mb-10">
-        <h2 className="mb-4 text-2xl font-semibold">Courses</h2>
+        <h2 className="mb-4 text-2xl font-semibold">{t("searchPage.courses")}</h2>
         <div className="grid gap-4 md:grid-cols-2">
           {results.courses.length > 0 ? (
             results.courses.map((course) => (
@@ -70,13 +74,15 @@ function SearchResultsPage() {
               </Link>
             ))
           ) : (
-            <p className="text-gray-500">No courses found.</p>
+            <p className="text-gray-500">{t("searchPage.noCourses")}</p>
           )}
         </div>
       </section>
 
       <section className="mb-10">
-        <h2 className="mb-4 text-2xl font-semibold">Publications</h2>
+        <h2 className="mb-4 text-2xl font-semibold">
+          {t("searchPage.publications")}
+        </h2>
         <div className="grid gap-4 md:grid-cols-2">
           {results.publications.length > 0 ? (
             results.publications.map((pub) => (
@@ -90,13 +96,13 @@ function SearchResultsPage() {
               </Link>
             ))
           ) : (
-            <p className="text-gray-500">No publications found.</p>
+            <p className="text-gray-500">{t("searchPage.noPublications")}</p>
           )}
         </div>
       </section>
 
       <section>
-        <h2 className="mb-4 text-2xl font-semibold">Events</h2>
+        <h2 className="mb-4 text-2xl font-semibold">{t("searchPage.events")}</h2>
         <div className="grid gap-4 md:grid-cols-2">
           {results.events.length > 0 ? (
             results.events.map((event) => (
@@ -110,7 +116,7 @@ function SearchResultsPage() {
               </Link>
             ))
           ) : (
-            <p className="text-gray-500">No events found.</p>
+            <p className="text-gray-500">{t("searchPage.noEvents")}</p>
           )}
         </div>
       </section>

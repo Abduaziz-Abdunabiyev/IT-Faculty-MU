@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../services/adminApi";
 
 const MONTHS = [
@@ -18,6 +19,7 @@ const MONTHS = [
 ];
 
 function AddPublication() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -68,7 +70,7 @@ function AddPublication() {
             ? Object.entries(data)
                 .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(", ") : v}`)
                 .join(" | ")
-            : "Failed to save publication";
+            : t("addPublication.saveFailed");
         setError(msg);
         return;
       }
@@ -76,7 +78,7 @@ function AddPublication() {
       // Saved — go back to the home page.
       navigate("/");
     } catch (err) {
-      setError(err?.message || "Network error");
+      setError(err?.message || t("addPublication.networkError"));
     } finally {
       setSubmitting(false);
     }
@@ -87,7 +89,7 @@ function AddPublication() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Add Publication</h2>
+      <h2 className="text-2xl font-bold mb-4">{t("addPublication.heading")}</h2>
 
       {error ? (
         <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -97,10 +99,12 @@ function AddPublication() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm text-slate-600 mb-1">Title *</label>
+          <label className="block text-sm text-slate-600 mb-1">
+            {t("addPublication.titleLabel")}
+          </label>
           <input
             className={inputClass}
-            placeholder="Artificial Intelligence in Modern Education Systems"
+            placeholder={t("addPublication.titlePlaceholder")}
             required
             value={formData.title}
             onChange={(e) => handleChange("title", e.target.value)}
@@ -108,10 +112,12 @@ function AddPublication() {
         </div>
 
         <div>
-          <label className="block text-sm text-slate-600 mb-1">Journal *</label>
+          <label className="block text-sm text-slate-600 mb-1">
+            {t("addPublication.journalLabel")}
+          </label>
           <input
             className={inputClass}
-            placeholder="International Journal of Artificial Intelligence"
+            placeholder={t("addPublication.journalPlaceholder")}
             required
             value={formData.journal}
             onChange={(e) => handleChange("journal", e.target.value)}
@@ -120,11 +126,13 @@ function AddPublication() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-slate-600 mb-1">Year *</label>
+            <label className="block text-sm text-slate-600 mb-1">
+              {t("addPublication.yearLabel")}
+            </label>
             <input
               type="number"
               className={inputClass}
-              placeholder="2026"
+              placeholder={t("addPublication.yearPlaceholder")}
               required
               value={formData.year}
               onChange={(e) => handleChange("year", e.target.value)}
@@ -132,16 +140,18 @@ function AddPublication() {
           </div>
 
           <div>
-            <label className="block text-sm text-slate-600 mb-1">Month</label>
+            <label className="block text-sm text-slate-600 mb-1">
+              {t("addPublication.monthLabel")}
+            </label>
             <select
               className={inputClass}
               value={formData.month}
               onChange={(e) => handleChange("month", e.target.value)}
             >
-              <option value="">Select...</option>
+              <option value="">{t("addPublication.selectMonth")}</option>
               {MONTHS.map((m) => (
                 <option key={m} value={m}>
-                  {m.charAt(0).toUpperCase() + m.slice(1)}
+                  {t(`addPublication.months.${m}`)}
                 </option>
               ))}
             </select>
@@ -150,12 +160,12 @@ function AddPublication() {
 
         <div>
           <label className="block text-sm text-slate-600 mb-1">
-            Description
+            {t("addPublication.descriptionLabel")}
           </label>
           <textarea
             className={inputClass}
             rows={6}
-            placeholder="Publication haqida qisqacha annotatsiya yoki tavsif yozing..."
+            placeholder={t("addPublication.descriptionPlaceholder")}
             value={formData.description}
             onChange={(e) => handleChange("description", e.target.value)}
           />
@@ -163,7 +173,7 @@ function AddPublication() {
 
         <div>
           <label className="block text-sm text-slate-600 mb-1">
-            Cover image (JPG, PNG, WEBP — optional)
+            {t("addPublication.coverImage")}
           </label>
           <input
             type="file"
@@ -174,7 +184,7 @@ function AddPublication() {
 
         <div>
           <label className="block text-sm text-slate-600 mb-1">
-            Publication file (PDF only, optional)
+            {t("addPublication.publicationFile")}
           </label>
           <input
             type="file"
@@ -188,7 +198,7 @@ function AddPublication() {
           disabled={submitting}
           className="bg-[#317873] text-white px-4 py-2 rounded disabled:opacity-60"
         >
-          {submitting ? "Saving..." : "Save Publication"}
+          {submitting ? t("addPublication.saving") : t("addPublication.save")}
         </button>
       </form>
     </div>

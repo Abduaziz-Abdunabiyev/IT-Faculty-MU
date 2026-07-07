@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../services/adminApi";
 
 const API_URL = API_BASE;
@@ -43,6 +44,7 @@ function extractYoutubeEmbed(url) {
 }
 
 export default function EventsPage() {
+  const { t } = useTranslation();
   const [events, setEvents] = useState([]);
   const [activeEvent, setActiveEvent] = useState(null);
   const [sortBy, setSortBy] = useState("all");
@@ -127,7 +129,7 @@ export default function EventsPage() {
     if (!activeEvent) return;
 
     if (!formData.full_name.trim() || !formData.email.trim()) {
-      setRegisterError("Full name va email majburiy.");
+      setRegisterError(t("eventsPage.nameEmailRequired"));
       return;
     }
 
@@ -158,11 +160,11 @@ export default function EventsPage() {
           data?.message ||
           data?.non_field_errors?.[0] ||
           data?.error ||
-          "Registration amalga oshmadi";
+          t("eventsPage.registrationFailed");
         throw new Error(message);
       }
 
-      setRegisterSuccess("Siz eventga muvaffaqiyatli ro‘yxatdan o‘tdingiz.");
+      setRegisterSuccess(t("eventsPage.registrationSuccess"));
       setFormData({
         full_name: "",
         email: "",
@@ -175,7 +177,7 @@ export default function EventsPage() {
         setRegisterSuccess("");
       }, 1200);
     } catch (error) {
-      setRegisterError(error.message || "Registration xatoligi");
+      setRegisterError(error.message || t("eventsPage.registrationError"));
     } finally {
       setRegisterLoading(false);
     }
@@ -223,19 +225,19 @@ export default function EventsPage() {
                   to="/"
                   className="text-[#AAF0D1] transition-all duration-200 hover:text-white"
                 >
-                  Home
+                  {t("eventsPage.breadcrumbHome")}
                 </Link>
               </li>
               <li>
                 <span className="mx-2 text-slate-400">›</span>
               </li>
-              <li className="text-slate-300">Events & Timeline</li>
+              <li className="text-slate-300">{t("eventsPage.eventsTimeline")}</li>
             </ol>
           </nav>
 
           <div className="relative">
             <h1 className="max-w-4xl text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
-              Events & Timeline
+              {t("eventsPage.eventsTimeline")}
             </h1>
 
             <div className="mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-[#AAF0D1] via-[#317873] to-transparent" />
@@ -251,7 +253,7 @@ export default function EventsPage() {
                 <iframe
                   className="h-[320px] w-full sm:h-[400px] lg:h-[460px]"
                   src={mediaUrl}
-                  title={activeEvent?.title || "Event"}
+                  title={activeEvent?.title || t("eventsPage.eventFallback")}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -259,7 +261,7 @@ export default function EventsPage() {
               ) : (
                 <img
                   src={mediaImage}
-                  alt={activeEvent?.title || "Event"}
+                  alt={activeEvent?.title || t("eventsPage.eventFallback")}
                   className="h-[320px] w-full object-cover sm:h-[400px] lg:h-[460px]"
                 />
               )}
@@ -275,21 +277,21 @@ export default function EventsPage() {
                   <div className="mt-4 space-y-3 text-sm sm:text-base text-slate-600 dark:text-slate-300">
                     <div>
                       <span className="font-medium text-[#091728] dark:text-white">
-                        Time:
+                        {t("eventsPage.time")}
                       </span>{" "}
                       {formatTime(activeEvent.start_time)}
                     </div>
 
                     <div>
                       <span className="font-medium text-[#091728] dark:text-white">
-                        Event Name:
+                        {t("eventsPage.eventName")}
                       </span>{" "}
                       {activeEvent.title}
                     </div>
 
                     <div>
                       <span className="font-medium text-[#091728] dark:text-white">
-                        Date:
+                        {t("eventsPage.date")}
                       </span>{" "}
                       {formatDate(activeEvent.start_date)}
                       {activeEvent.end_date
@@ -299,23 +301,23 @@ export default function EventsPage() {
 
                     <div>
                       <span className="font-medium text-[#091728] dark:text-white">
-                        Location:
+                        {t("eventsPage.location")}
                       </span>{" "}
                       {activeEvent.location}
                     </div>
 
                     <div>
                       <span className="font-medium text-[#091728] dark:text-white">
-                        Guest Lecture:
+                        {t("eventsPage.guestLecture")}
                       </span>{" "}
                       {activeEvent.speaker_display ||
                         activeEvent.speaker_name ||
-                        "N/A"}
+                        t("eventsPage.na")}
                     </div>
 
                     <div className="whitespace-pre-line">
                       <span className="font-medium text-[#091728] dark:text-white">
-                        Information:
+                        {t("eventsPage.information")}
                       </span>{" "}
                       {activeEvent.description}
                     </div>
@@ -323,7 +325,7 @@ export default function EventsPage() {
                 </>
               ) : (
                 <p className="text-slate-500 dark:text-slate-300">
-                  No event selected.
+                  {t("eventsPage.noEventSelected")}
                 </p>
               )}
             </div>
@@ -335,7 +337,7 @@ export default function EventsPage() {
                 htmlFor="ev-filter"
                 className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200"
               >
-                Sort by
+                {t("eventsPage.sortBy")}
               </label>
 
               <select
@@ -344,18 +346,24 @@ export default function EventsPage() {
                 onChange={(e) => setSortBy(e.target.value)}
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-[#317873] focus:ring-2 focus:ring-[#317873]/10 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
               >
-                <option value="all">All</option>
-                <option value="year-2026">Year: 2026</option>
-                <option value="year-2025">Year: 2025</option>
-                <option value="month-june">Month: June</option>
-                <option value="month-july">Month: July</option>
-                <option value="month-september">Month: September</option>
+                <option value="all">{t("eventsPage.filterAll")}</option>
+                <option value="year-2026">{t("eventsPage.yearLabel")}: 2026</option>
+                <option value="year-2025">{t("eventsPage.yearLabel")}: 2025</option>
+                <option value="month-june">
+                  {t("eventsPage.monthLabel")}: {t("eventsPage.months.june")}
+                </option>
+                <option value="month-july">
+                  {t("eventsPage.monthLabel")}: {t("eventsPage.months.july")}
+                </option>
+                <option value="month-september">
+                  {t("eventsPage.monthLabel")}: {t("eventsPage.months.september")}
+                </option>
               </select>
             </div>
 
             <div className="rounded-3xl border border-slate-200/70 bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)] dark:border-white/10 dark:bg-[#1A2644] lg:max-h-[70vh] lg:overflow-y-auto">
               <h2 className="mb-4 text-lg font-semibold tracking-tight text-[#091728] dark:text-white">
-                Timeline 2025–2026
+                {t("eventsPage.timeline")} 2025–2026
               </h2>
 
               <ul className="space-y-4">

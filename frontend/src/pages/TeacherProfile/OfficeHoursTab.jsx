@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../../services/adminApi";
 
 function OfficeHoursTab({ officeHours = [], isOwner = false }) {
+  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -37,8 +39,8 @@ function OfficeHoursTab({ officeHours = [], isOwner = false }) {
 
         Swal.fire({
           icon: "error",
-          title: "Error",
-          text: "Save failed",
+          title: t("profile.officeHours.alerts.errorTitle"),
+          text: t("profile.officeHours.alerts.saveFailed"),
         });
 
         return;
@@ -46,7 +48,9 @@ function OfficeHoursTab({ officeHours = [], isOwner = false }) {
 
       Swal.fire({
         icon: "success",
-        title: editingItem ? "Office Hour Updated" : "Office Hour Added",
+        title: editingItem
+          ? t("profile.officeHours.alerts.updated")
+          : t("profile.officeHours.alerts.added"),
         timer: 1200,
         showConfirmButton: false,
       });
@@ -62,12 +66,12 @@ function OfficeHoursTab({ officeHours = [], isOwner = false }) {
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
-      title: "Delete office hour?",
-      text: "This action cannot be undone",
+      title: t("profile.officeHours.alerts.deleteConfirmTitle"),
+      text: t("profile.officeHours.alerts.deleteConfirmText"),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#dc2626",
-      confirmButtonText: "Delete",
+      confirmButtonText: t("profile.officeHours.delete"),
     });
 
     if (!result.isConfirmed) return;
@@ -88,7 +92,7 @@ function OfficeHoursTab({ officeHours = [], isOwner = false }) {
 
       Swal.fire({
         icon: "success",
-        title: "Deleted",
+        title: t("profile.officeHours.alerts.deleted"),
         timer: 1200,
         showConfirmButton: false,
       });
@@ -97,7 +101,7 @@ function OfficeHoursTab({ officeHours = [], isOwner = false }) {
     } catch {
       Swal.fire({
         icon: "error",
-        title: "Delete failed",
+        title: t("profile.officeHours.alerts.deleteFailed"),
       });
     }
   };
@@ -107,11 +111,13 @@ function OfficeHoursTab({ officeHours = [], isOwner = false }) {
         <div className="flex items-center justify-between px-8 py-6 border-b border-slate-200 dark:border-slate-700">
           <div>
             <h3 className="text-xl font-bold mb-6 dark:text-white">
-              {editingItem ? "Edit Office Hour" : "Add Office Hour"}
+              {editingItem
+                ? t("profile.officeHours.editTitle")
+                : t("profile.officeHours.addTitle")}
             </h3>
 
             <p className="text-sm text-slate-500 mt-1">
-              Student consultation and availability schedule
+              {t("profile.officeHours.subtitle")}
             </p>
           </div>
 
@@ -120,7 +126,7 @@ function OfficeHoursTab({ officeHours = [], isOwner = false }) {
               onClick={() => setShowModal(true)}
               className="px-5 py-2.5 rounded-xl bg-[#317873] hover:bg-[#285f5b] text-white font-medium transition-all"
             >
-              + Add Office Hour
+              {t("profile.officeHours.add")}
             </button>
           )}
         </div>
@@ -160,14 +166,14 @@ function OfficeHoursTab({ officeHours = [], isOwner = false }) {
                             setShowModal(true);
                           }}
                         >
-                          Edit
+                          {t("profile.officeHours.edit")}
                         </button>
 
                         <button
                           onClick={() => handleDelete(item.id)}
                           className="px-4 py-2 rounded-xl border border-red-300 text-red-600"
                         >
-                          Delete
+                          {t("profile.officeHours.delete")}
                         </button>
                       </div>
                     )}
@@ -180,11 +186,11 @@ function OfficeHoursTab({ officeHours = [], isOwner = false }) {
               <div className="text-5xl mb-3">🕒</div>
 
               <h4 className="text-lg font-semibold text-slate-900 dark:text-white">
-                No office hours yet
+                {t("profile.officeHours.emptyTitle")}
               </h4>
 
               <p className="text-slate-500 mt-2">
-                Add your availability schedule for students.
+                {t("profile.officeHours.emptySubtitle")}
               </p>
             </div>
           )}
@@ -195,7 +201,7 @@ function OfficeHoursTab({ officeHours = [], isOwner = false }) {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white dark:bg-[#111827] rounded-3xl w-full max-w-md p-6 shadow-2xl">
             <h3 className="text-xl font-bold mb-6 dark:text-white">
-              Add Office Hour
+              {t("profile.officeHours.addTitle")}
             </h3>
 
             <div className="space-y-4">
@@ -209,12 +215,24 @@ function OfficeHoursTab({ officeHours = [], isOwner = false }) {
                 }
                 className="w-full border rounded-xl p-3"
               >
-                <option value="monday">Monday</option>
-                <option value="tuesday">Tuesday</option>
-                <option value="wednesday">Wednesday</option>
-                <option value="thursday">Thursday</option>
-                <option value="friday">Friday</option>
-                <option value="saturday">Saturday</option>
+                <option value="monday">
+                  {t("profile.officeHours.days.monday")}
+                </option>
+                <option value="tuesday">
+                  {t("profile.officeHours.days.tuesday")}
+                </option>
+                <option value="wednesday">
+                  {t("profile.officeHours.days.wednesday")}
+                </option>
+                <option value="thursday">
+                  {t("profile.officeHours.days.thursday")}
+                </option>
+                <option value="friday">
+                  {t("profile.officeHours.days.friday")}
+                </option>
+                <option value="saturday">
+                  {t("profile.officeHours.days.saturday")}
+                </option>
               </select>
 
               <input
@@ -247,14 +265,14 @@ function OfficeHoursTab({ officeHours = [], isOwner = false }) {
                 onClick={() => setShowModal(false)}
                 className="px-4 py-2 rounded-xl border"
               >
-                Cancel
+                {t("profile.officeHours.cancel")}
               </button>
 
               <button
                 onClick={handleSave}
                 className="px-4 py-2 rounded-xl bg-[#317873] hover:bg-[#285f5b] text-white"
               >
-                Save
+                {t("profile.officeHours.save")}
               </button>
             </div>
           </div>

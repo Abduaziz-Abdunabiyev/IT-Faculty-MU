@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { Calendar, User, BookOpen, ArrowUpRight } from "lucide-react";
 import { API_BASE } from "../services/adminApi";
@@ -7,10 +8,10 @@ import { API_BASE } from "../services/adminApi";
 const API_URL = API_BASE;
 
 const TAB_OPTIONS = [
-  { key: "video", label: "Videogallery" },
-  { key: "photo", label: "Photo Gallery" },
-  { key: "media", label: "Media Gallery" },
-  { key: "publications", label: "Publications" },
+  { key: "video", label: "publicationsPage.tabs.video" },
+  { key: "photo", label: "publicationsPage.tabs.photo" },
+  { key: "media", label: "publicationsPage.tabs.media" },
+  { key: "publications", label: "publicationsPage.tabs.publications" },
 ];
 
 function extractYouTubeEmbed(url) {
@@ -29,6 +30,7 @@ function extractYouTubeEmbed(url) {
 }
 
 function PublicationCard({ item, isAdmin, toggleHidden }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const pub = item;
@@ -94,7 +96,9 @@ function PublicationCard({ item, isAdmin, toggleHidden }) {
                       : "border-red-500 text-red-500 hover:bg-red-500/10"
                   }`}
                 >
-                  {pub.is_hidden ? "Unhide" : "Hide"}
+                  {pub.is_hidden
+                    ? t("publicationsPage.unhide")
+                    : t("publicationsPage.hide")}
                 </button>
               </div>
             )}
@@ -104,7 +108,7 @@ function PublicationCard({ item, isAdmin, toggleHidden }) {
               className="mt-6 flex cursor-pointer items-center justify-between border-t border-slate-200 dark:border-slate-700 pt-5"
             >
               <span className="text-sm text-slate-500 dark:text-slate-400">
-                View Publication Details
+                {t("publicationsPage.viewDetails")}
               </span>
 
               <ArrowUpRight size={18} className="text-[#317873]" />
@@ -117,6 +121,7 @@ function PublicationCard({ item, isAdmin, toggleHidden }) {
 }
 
 function GalleryCard({ item }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const mediaUrl = item.video_embed_url || item.video_url || null;
   const isVideo = item.section === "video" && mediaUrl;
@@ -143,7 +148,7 @@ function GalleryCard({ item }) {
         </div>
       ) : (
         <div className="flex h-[260px] sm:h-[320px] md:h-[380px] lg:h-[420px] w-full items-center justify-center bg-slate-100 text-sm text-slate-500 dark:bg-white/5 dark:text-slate-400">
-          No media available
+          {t("publicationsPage.noMedia")}
         </div>
       )}
 
@@ -164,11 +169,11 @@ function GalleryCard({ item }) {
             onClick={() => navigate(`/teachers/${item.teacher_id}`)}
             className="mt-4 cursor-pointer text-center text-sm sm:text-base text-[#317873] dark:text-[#AAF0D1] underline decoration-[#317873]/30 underline-offset-4 transition hover:opacity-90"
           >
-            by {item.teacher_name}
+            {t("publicationsPage.by")} {item.teacher_name}
           </p>
         ) : (
           <p className="mt-4 text-center text-sm sm:text-base text-[#317873]/80 dark:text-[#AAF0D1]/80 underline decoration-[#317873]/20 underline-offset-4">
-            by {item.teacher_name}
+            {t("publicationsPage.by")} {item.teacher_name}
           </p>
         )}
       </div>
@@ -177,6 +182,7 @@ function GalleryCard({ item }) {
 }
 
 export default function PublicationsPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("video");
   const [filter, setFilter] = useState("all");
   const [galleryItems, setGalleryItems] = useState([]);
@@ -202,7 +208,7 @@ export default function PublicationsPage() {
       });
 
       if (!res.ok) {
-        alert("Update failed");
+        alert(t("publicationsPage.updateFailed"));
         return;
       }
 
@@ -213,7 +219,7 @@ export default function PublicationsPage() {
       );
     } catch (err) {
       console.error(err);
-      alert("Update failed");
+      alert(t("publicationsPage.updateFailed"));
     }
   };
   useEffect(() => {
@@ -355,19 +361,19 @@ export default function PublicationsPage() {
                   to="/"
                   className="text-[#AAF0D1] transition-all duration-200 hover:text-white"
                 >
-                  Home
+                  {t("publicationsPage.home")}
                 </Link>
               </li>
               <li>
                 <span className="mx-2 text-slate-400">›</span>
               </li>
-              <li className="text-slate-300">Publications</li>
+              <li className="text-slate-300">{t("publicationsPage.title")}</li>
             </ol>
           </nav>
 
           <div className="relative">
             <h1 className="max-w-4xl text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
-              Publications
+              {t("publicationsPage.title")}
             </h1>
 
             <div className="mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-[#AAF0D1] via-[#317873] to-transparent" />
@@ -388,7 +394,7 @@ export default function PublicationsPage() {
                 }`}
                 onClick={() => setActiveTab(tab.key)}
               >
-                {tab.label}
+                {t(tab.label)}
               </button>
             ))}
           </div>
@@ -398,7 +404,7 @@ export default function PublicationsPage() {
               htmlFor="filter"
               className="text-sm font-medium text-slate-700 dark:text-slate-200"
             >
-              Filter by:
+              {t("publicationsPage.filterBy")}
             </label>
             <select
               id="filter"
@@ -406,17 +412,19 @@ export default function PublicationsPage() {
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
             >
-              <option value="all">All</option>
+              <option value="all">{t("publicationsPage.all")}</option>
 
               {activeFilters.years.map((year) => (
                 <option key={`year-${year}`} value={`year-${year}`}>
-                  Year: {year}
+                  {t("publicationsPage.yearOption", { year })}
                 </option>
               ))}
 
               {activeFilters.months.map((month) => (
                 <option key={`month-${month}`} value={`month-${month}`}>
-                  Month: {month.charAt(0).toUpperCase() + month.slice(1)}
+                  {t("publicationsPage.monthOption", {
+                    month: t(`publicationsPage.months.${month}`),
+                  })}
                 </option>
               ))}
             </select>
@@ -460,23 +468,23 @@ export default function PublicationsPage() {
 
           {activeTab === "video" && filteredGalleryItems.length === 0 && (
             <p className="text-slate-500 dark:text-slate-300">
-              No video items found.
+              {t("publicationsPage.noVideo")}
             </p>
           )}
           {activeTab === "photo" && filteredGalleryItems.length === 0 && (
             <p className="text-slate-500 dark:text-slate-300">
-              No photo items found.
+              {t("publicationsPage.noPhoto")}
             </p>
           )}
           {activeTab === "media" && filteredGalleryItems.length === 0 && (
             <p className="text-slate-500 dark:text-slate-300">
-              No media items found.
+              {t("publicationsPage.noMediaItems")}
             </p>
           )}
           {activeTab === "publications" &&
             filteredPublications.length === 0 && (
               <p className="text-slate-500 dark:text-slate-300">
-                No publications found.
+                {t("publicationsPage.noPublications")}
               </p>
             )}
         </div>

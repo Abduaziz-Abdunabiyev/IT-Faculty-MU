@@ -1,11 +1,17 @@
+import { useTranslation } from "react-i18next";
+
 function ResearchTab({ researchList }) {
+  const { t } = useTranslation();
+
   if (!researchList || researchList.length === 0) {
-    return <p className="text-gray-500">No research found.</p>;
+    return <p className="text-gray-500">{t("profile.research.empty")}</p>;
   }
 
   return (
     <div>
-      <h3 className="text-2xl font-semibold mb-6">Research Projects</h3>
+      <h3 className="text-2xl font-semibold mb-6">
+        {t("profile.research.title")}
+      </h3>
 
       <div className="space-y-6">
         {researchList.map((research) => (

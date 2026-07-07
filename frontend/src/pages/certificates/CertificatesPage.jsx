@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import CertificateCard from "../../components/certificates/CertificateCard";
 import { API_BASE } from "../../services/adminApi";
 
@@ -16,6 +17,7 @@ function formatDate(dateString) {
 }
 
 export default function CertificatesPage() {
+  const { t } = useTranslation();
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCertificate, setSelectedCertificate] = useState(null);
@@ -89,10 +91,10 @@ export default function CertificatesPage() {
   };
 
   const recipientOptions = [
-    { value: "all", label: "All" },
-    { value: "teacher", label: "Teacher" },
-    { value: "student", label: "Student" },
-    { value: "department", label: "Department" },
+    { value: "all", label: t("certificatesPage.recipientAll") },
+    { value: "teacher", label: t("certificatesPage.recipientTeacher") },
+    { value: "student", label: t("certificatesPage.recipientStudent") },
+    { value: "department", label: t("certificatesPage.recipientDepartment") },
   ];
 
   const renderPageNumbers = () => {
@@ -122,19 +124,19 @@ export default function CertificatesPage() {
                   to="/"
                   className="text-[#AAF0D1] transition-all duration-200 hover:text-white"
                 >
-                  Home
+                  {t("certificatesPage.breadcrumbHome")}
                 </Link>
               </li>
               <li>
                 <span className="mx-2 text-slate-400">›</span>
               </li>
-              <li className="text-slate-300">Certificates</li>
+              <li className="text-slate-300">{t("certificatesPage.title")}</li>
             </ol>
           </nav>
 
           <div className="relative">
             <h1 className="max-w-4xl text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
-              Certificates
+              {t("certificatesPage.title")}
             </h1>
 
             <div className="mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-[#AAF0D1] via-[#317873] to-transparent" />
@@ -150,7 +152,7 @@ export default function CertificatesPage() {
             <div className="flex flex-col gap-4 lg:flex-row">
               <input
                 type="text"
-                placeholder="Search certificates..."
+                placeholder={t("certificatesPage.searchPlaceholder")}
                 value={search}
                 onChange={handleSearchChange}
                 className="h-14 flex-1 rounded-2xl border border-slate-200 bg-white px-5 text-sm outline-none transition focus:border-[#317873] focus:ring-2 focus:ring-[#317873]/10 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
@@ -174,7 +176,7 @@ export default function CertificatesPage() {
           <section className="mb-10 grid grid-cols-1 gap-5 md:grid-cols-2">
             <div className="rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
               <p className="mb-2 text-sm text-slate-500 dark:text-slate-400">
-                Total Certificates
+                {t("certificatesPage.totalCertificates")}
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#091728] dark:text-white">
                 {count}
@@ -183,7 +185,7 @@ export default function CertificatesPage() {
 
             <div className="rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/5">
               <p className="mb-2 text-sm text-slate-500 dark:text-slate-400">
-                Page Results
+                {t("certificatesPage.pageResults")}
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#091728] dark:text-white">
                 {certificates.length}
@@ -194,7 +196,7 @@ export default function CertificatesPage() {
           {/* Cards */}
           {loading ? (
             <div className="py-20 text-center text-slate-500 dark:text-slate-300">
-              Loading certificates...
+              {t("certificatesPage.loading")}
             </div>
           ) : certificates.length > 0 ? (
             <section className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
@@ -208,7 +210,7 @@ export default function CertificatesPage() {
             </section>
           ) : (
             <div className="rounded-3xl border border-dashed border-slate-300 bg-white/80 p-16 text-center text-slate-500 shadow-[0_18px_50px_rgba(15,23,42,0.04)] dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
-              No certificates found.
+              {t("certificatesPage.noCertificates")}
             </div>
           )}
 
@@ -220,7 +222,7 @@ export default function CertificatesPage() {
                 disabled={currentPage === 1}
                 className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
               >
-                Previous
+                {t("certificatesPage.previous")}
               </button>
 
               {renderPageNumbers().map((page) => (
@@ -242,7 +244,7 @@ export default function CertificatesPage() {
                 disabled={currentPage === totalPages}
                 className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
               >
-                Next
+                {t("certificatesPage.next")}
               </button>
             </div>
           )}
@@ -278,7 +280,7 @@ export default function CertificatesPage() {
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center text-slate-400">
-                    No Preview
+                    {t("certificatesPage.noPreview")}
                   </div>
                 )}
               </div>
@@ -293,13 +295,14 @@ export default function CertificatesPage() {
                 </h2>
 
                 <p className="mb-8 text-sm sm:text-base text-slate-500 dark:text-slate-300">
-                  Issued: {formatDate(selectedCertificate.date_issued)}
+                  {t("certificatesPage.issued")}{" "}
+                  {formatDate(selectedCertificate.date_issued)}
                 </p>
 
                 {selectedCertificate.recipients?.length > 0 && (
                   <div className="mb-10">
                     <h3 className="mb-5 text-lg sm:text-xl font-semibold text-[#091728] dark:text-white">
-                      Recipients
+                      {t("certificatesPage.recipients")}
                     </h3>
 
                     <div className="space-y-3">
@@ -330,7 +333,7 @@ export default function CertificatesPage() {
                     rel="noreferrer"
                     className="inline-flex items-center justify-center rounded-full bg-[#317873] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#245c58] dark:bg-[#AAF0D1] dark:text-[#081120] dark:hover:bg-[#8ce9c2]"
                   >
-                    Open Certificate File
+                    {t("certificatesPage.openFile")}
                   </a>
                 )}
               </div>

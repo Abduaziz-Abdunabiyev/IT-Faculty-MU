@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Pencil, Trash2, Plus, Clock3 } from "lucide-react";
 
 import PersonalTab from "./PersonalTab";
@@ -11,6 +12,7 @@ import CoursesTab from "./CoursesTab";
 import { API_BASE } from "../../services/adminApi";
 
 function TeacherProfile() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const location = useLocation();
 
@@ -163,7 +165,7 @@ function TeacherProfile() {
       setOfficeHours((prev) => prev.filter((item) => item.id !== officeHourId));
     } catch (err) {
       console.error(err);
-      alert("Failed to delete office hour");
+      alert(t("profile.officeHourActions.deleteFailed"));
     }
   };
 
@@ -250,7 +252,7 @@ function TeacherProfile() {
       setShowCourseModal(false);
     } catch (err) {
       console.error(err);
-      alert("Failed to create course");
+      alert(t("profile.courseActions.createFailed"));
     }
   };
 
@@ -287,12 +289,12 @@ function TeacherProfile() {
       setEditingCourse(null);
     } catch (err) {
       console.error(err);
-      alert("Failed to update course");
+      alert(t("profile.courseActions.updateFailed"));
     }
   };
 
   const handleDeleteCourse = async (courseId) => {
-    const confirmed = window.confirm("Delete this course?");
+    const confirmed = window.confirm(t("profile.courseActions.confirmDelete"));
 
     if (!confirmed) return;
 
@@ -311,14 +313,15 @@ function TeacherProfile() {
       setCourses((prev) => prev.filter((course) => course.id !== courseId));
     } catch (err) {
       console.error(err);
-      alert("Failed to delete course");
+      alert(t("profile.courseActions.deleteFailed"));
     }
   };
 
   const teacherImage =
     teacher?.photo_url || teacher?.photo || "/images/person1.png";
 
-  if (loading) return <div className="p-10 text-center">Loading...</div>;
+  if (loading)
+    return <div className="p-10 text-center">{t("profile.loading")}</div>;
   console.log("TeacherProfile render", {
     loading,
     teacher,
@@ -326,7 +329,9 @@ function TeacherProfile() {
   if (!teacher) {
     console.log("NOT FOUND BLOCK IS RUNNING");
     return (
-      <div className="p-10 text-center text-red-600">Teacher not found.</div>
+      <div className="p-10 text-center text-red-600">
+        {t("profile.notFound")}
+      </div>
     );
   }
 
@@ -366,7 +371,7 @@ function TeacherProfile() {
               <div className="flex items-center justify-between mb-3">
                 <h3 className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   <Clock3 size={14} />
-                  Office Hours
+                  {t("profile.sidebar.officeHours")}
                 </h3>
 
                 {isTeacherOwner && (
@@ -474,7 +479,7 @@ function TeacherProfile() {
                     : "text-gray-600  dark:text-gray-300"
                 }
               >
-                Personal
+                {t("profile.tabs.personal")}
               </button>
               <button
                 onClick={() => setActiveTab("education")}
@@ -484,7 +489,7 @@ function TeacherProfile() {
                     : "text-gray-600  dark:text-gray-300"
                 }
               >
-                Education
+                {t("profile.tabs.education")}
               </button>
               <button
                 onClick={() => setActiveTab("research")}
@@ -494,7 +499,7 @@ function TeacherProfile() {
                     : "text-gray-600  dark:text-gray-300"
                 }
               >
-                Research
+                {t("profile.tabs.research")}
               </button>
               <button
                 onClick={() => setActiveTab("publications")}
@@ -504,7 +509,7 @@ function TeacherProfile() {
                     : "text-gray-600  dark:text-gray-300"
                 }
               >
-                Publications
+                {t("profile.tabs.publications")}
               </button>
               <button
                 onClick={() => setActiveTab("courses")}
@@ -514,7 +519,7 @@ function TeacherProfile() {
                     : "text-gray-600 dark:text-gray-300"
                 }
               >
-                Courses
+                {t("profile.tabs.courses")}
               </button>
               <button
                 onClick={() => setActiveTab("honors")}
@@ -524,7 +529,7 @@ function TeacherProfile() {
                     : "text-gray-600  dark:text-gray-300"
                 }
               >
-                Honors & Awards
+                {t("profile.tabs.honors")}
               </button>
             </nav>
           </div>
@@ -576,7 +581,7 @@ function TeacherProfile() {
             <section className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-8 border border-[#80808012] dark:border-gray-700">
               <h3 className="text-2xl font-semibold text-[#091728] dark:text-white mb-6 flex items-center gap-3 border-b border-[#B69B83] pb-3">
                 <span className="text-[#B69B83]">🏆</span>
-                Honors & Awards
+                {t("profile.honors.title")}
               </h3>
 
               <ul className="space-y-4 text-[#54595F] dark:text-gray-300 leading-relaxed">
@@ -590,7 +595,7 @@ function TeacherProfile() {
                       {item.title ||
                         item.name ||
                         item.award_title ||
-                        "Honor award"}
+                        t("profile.honors.fallbackTitle")}
                       {item.year ? `, ${item.year}` : ""}
                     </li>
                   ))
@@ -598,7 +603,7 @@ function TeacherProfile() {
                   <>
                     <li className="p-3 rounded-lg border border-[#80808012] dark:border-gray-700">
                       <span className="text-[#B69B83] pr-3">✔</span>
-                      No honor awards found yet.
+                      {t("profile.honors.empty")}
                     </li>
                   </>
                 )}

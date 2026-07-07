@@ -1,8 +1,10 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../services/adminApi";
 
 function AnnouncementDetails() {
+  const { t } = useTranslation();
   const { slug } = useParams();
 
   const [data, setData] = useState(null);
@@ -48,7 +50,7 @@ function AnnouncementDetails() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-background text-gray-600 dark:text-gray-300">
-        Loading announcement...
+        {t("announcementDetails.loading")}
       </div>
     );
   }
@@ -56,7 +58,7 @@ function AnnouncementDetails() {
   if (!data) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-background text-red-400">
-        Announcement not found.
+        {t("announcementDetails.notFound")}
       </div>
     );
   }
@@ -68,12 +70,12 @@ function AnnouncementDetails() {
 
         <div className="text-sm text-gray-500 dark:text-gray-400 mb-6 flex gap-2">
           <Link to="/" className="hover:text-button">
-            Home
+            {t("announcementDetails.breadcrumbHome")}
           </Link>
 
           <span>/</span>
 
-          <span>Announcement</span>
+          <span>{t("announcementDetails.breadcrumbAnnouncement")}</span>
 
           <span>/</span>
 
@@ -86,7 +88,7 @@ function AnnouncementDetails() {
           to="/"
           className="inline-block mb-8 text-sm text-button hover:underline"
         >
-          ← Back to announcements
+          ← {t("announcementDetails.backToAnnouncements")}
         </Link>
 
         {/* CARD */}
@@ -144,7 +146,7 @@ function AnnouncementDetails() {
                 rel="noopener noreferrer"
                 className="px-6 py-2 bg-[#AAF0D1] text-black rounded-lg hover:bg-[#B69B83] transition"
               >
-                Register Now
+                {t("announcementDetails.registerNow")}
               </a>
             </div>
           )}

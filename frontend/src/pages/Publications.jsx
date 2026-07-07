@@ -1,5 +1,9 @@
+import { useTranslation } from "react-i18next";
+
 function Publications() {
-  return <div className="py-20">Publications Page</div>;
+  const { t } = useTranslation();
+
+  return <div className="py-20">{t("publicationsPage.stub")}</div>;
 }
 
 export default Publications;
