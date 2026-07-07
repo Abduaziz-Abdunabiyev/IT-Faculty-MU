@@ -76,7 +76,7 @@ export function AuthProvider({ children }) {
       localStorage.removeItem("refresh");
       localStorage.removeItem("token");
 
-      window.location.href = "/login";
+      window.location.href = "/";
     }
   };
 

@@ -64,7 +64,7 @@ function Navbar() {
     try {
       await logout();
     } finally {
-      navigate("/login");
+      navigate("/");
     }
   };
 
