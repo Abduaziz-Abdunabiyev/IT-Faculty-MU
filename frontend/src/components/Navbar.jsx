@@ -8,6 +8,7 @@ import {
   LogOut,
   LayoutDashboard,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
@@ -17,6 +18,11 @@ function Navbar() {
 
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { t, i18n } = useTranslation();
+
+  const [lang, setLang] = useState(
+    (localStorage.getItem("lang") || i18n.language || "EN").toUpperCase(),
+  );
 
   const admin = user?.is_staff || user?.role === "admin";
   const teacher = user?.role === "teacher" || user?.teacher_id;
@@ -32,6 +38,20 @@ function Navbar() {
       setDark(false);
     }
   }, []);
+
+  useEffect(() => {
+    const saved = (localStorage.getItem("lang") || "EN").toUpperCase();
+    setLang(saved);
+    i18n.changeLanguage(saved.toLowerCase());
+    document.documentElement.lang = saved.toLowerCase();
+  }, [i18n]);
+
+  const changeLang = (value) => {
+    setLang(value);
+    localStorage.setItem("lang", value);
+    i18n.changeLanguage(value.toLowerCase());
+    document.documentElement.lang = value.toLowerCase();
+  };
 
   const toggleDark = () => {
     document.documentElement.classList.toggle("dark");
@@ -85,17 +105,17 @@ function Navbar() {
         <ul className="flex items-center gap-6">
           <li>
             <NavLink to="/" end className={linkClass}>
-              Home
+              {t("nav.home")}
             </NavLink>
           </li>
           <li>
             <NavLink to="/about" className={linkClass}>
-              About
+              {t("nav.about")}
             </NavLink>
           </li>
           <li>
             <NavLink to="/teachers" className={linkClass}>
-              Teachers
+              {t("nav.teachers")}
             </NavLink>
           </li>
 
@@ -105,7 +125,7 @@ function Navbar() {
               className={linkClass}
               onClick={() => setOpenDropdown(false)}
             >
-              Courses
+              {t("nav.courses")}
             </NavLink>
 
             <button
@@ -130,7 +150,7 @@ function Navbar() {
                     className={dropdownLinkClass}
                     onClick={() => setOpenDropdown(false)}
                   >
-                    Events
+                    {t("nav.events")}
                   </NavLink>
                 </li>
                 <li>
@@ -139,7 +159,7 @@ function Navbar() {
                     className={dropdownLinkClass}
                     onClick={() => setOpenDropdown(false)}
                   >
-                    Publications
+                    {t("nav.publications")}
                   </NavLink>
                 </li>
                 <li>
@@ -148,7 +168,7 @@ function Navbar() {
                     className={dropdownLinkClass}
                     onClick={() => setOpenDropdown(false)}
                   >
-                    Certificates
+                    {t("nav.certificates")}
                   </NavLink>
                 </li>
                 <li>
@@ -157,7 +177,7 @@ function Navbar() {
                     className={dropdownLinkClass}
                     onClick={() => setOpenDropdown(false)}
                   >
-                    Research
+                    {t("nav.research")}
                   </NavLink>
                 </li>
               </ul>
@@ -171,7 +191,7 @@ function Navbar() {
               <Search size={16} className="text-slate-400" />
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder={t("common.search")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="w-[150px] bg-transparent text-sm outline-none placeholder:text-slate-400 dark:text-white"
@@ -179,10 +199,15 @@ function Navbar() {
             </div>
           </form>
 
-          <select className="hidden sm:block rounded-full border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm outline-none transition-all duration-200 hover:border-button dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
-            <option>EN</option>
-            <option>UZ</option>
-            <option>RU</option>
+          <select
+            value={lang}
+            onChange={(e) => changeLang(e.target.value)}
+            aria-label="Language"
+            className="hidden sm:block rounded-full border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm outline-none transition-all duration-200 hover:border-button dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+          >
+            <option value="EN">EN</option>
+            <option value="UZ">UZ</option>
+            <option value="RU">RU</option>
           </select>
 
           {!user ? (
@@ -190,7 +215,7 @@ function Navbar() {
               to="/login"
               className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition-all duration-200 hover:border-button hover:text-button dark:border-slate-700 dark:text-slate-200 dark:hover:border-button"
             >
-              Login
+              {t("auth.login")}
             </Link>
           ) : (
             <div className="flex items-center gap-2 sm:gap-3">
@@ -200,13 +225,13 @@ function Navbar() {
 
               {admin && (
                 <span className="rounded-full bg-red-100 px-2.5 py-1 text-[11px] font-semibold text-red-600 dark:bg-red-500/10 dark:text-red-300">
-                  Admin
+                  {t("roles.admin")}
                 </span>
               )}
 
               {teacher && !admin && (
                 <span className="rounded-full bg-green-100 px-2.5 py-1 text-[11px] font-semibold text-green-600 dark:bg-green-500/10 dark:text-green-300">
-                  Teacher
+                  {t("roles.teacher")}
                 </span>
               )}
 
@@ -216,7 +241,7 @@ function Navbar() {
                   className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 shadow-sm transition-all duration-200 hover:border-blue-300 hover:bg-blue-100 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-300"
                 >
                   <LayoutDashboard size={16} />
-                  Dashboard
+                  {t("auth.dashboard")}
                 </button>
               )}
 
@@ -225,7 +250,7 @@ function Navbar() {
                 className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-600 shadow-sm transition-all duration-200 hover:border-red-300 hover:bg-red-100 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-300"
               >
                 <LogOut size={16} />
-                Logout
+                {t("auth.logout")}
               </button>
             </div>
           )}

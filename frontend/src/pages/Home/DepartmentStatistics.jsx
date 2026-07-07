@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../../services/adminApi";
 
 function DepartmentStatistics() {
+  const { t } = useTranslation();
   const BASE_URL = API_BASE;
 
   const [statistics, setStatistics] = useState([]);
@@ -84,7 +86,7 @@ function DepartmentStatistics() {
 
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-normal mb-3 dark:text-[#AAF0D1] text-[#091728]">
-            Department Statistics
+            {t("home.statistics.title")}
           </h2>
 
           <div className="relative w-24 h-1 mx-auto overflow-hidden rounded-full bg-[#d8f3ea] dark:bg-[#1f355f]">

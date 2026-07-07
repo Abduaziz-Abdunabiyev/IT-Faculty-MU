@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -12,6 +13,7 @@ import { API_BASE } from "../services/adminApi";
 const BASE_URL = API_BASE;
 
 function Login() {
+  const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -48,7 +50,7 @@ function Login() {
           tokenData.detail ||
           tokenData.message ||
           tokenData.non_field_errors?.[0] ||
-          "Login failed";
+          t("login.loginFailed");
         throw new Error(message);
       }
 
@@ -56,7 +58,7 @@ function Login() {
       const refresh = tokenData?.refresh;
 
       if (!access || !refresh) {
-        throw new Error("Token response noto‘g‘ri keldi.");
+        throw new Error(t("login.tokenError"));
       }
 
       const userRes = await fetch(`${BASE_URL}/api/accounts/me/`, {
@@ -72,7 +74,7 @@ function Login() {
         const message =
           userData.detail ||
           userData.message ||
-          "User ma’lumotlarini olishda xatolik";
+          t("login.userDataError");
         throw new Error(message);
       }
 
@@ -98,7 +100,7 @@ function Login() {
     } catch (err) {
       console.error("LOGIN ERROR:", err);
       clearAuthTokens();
-      setError(err.message || "Server error");
+      setError(err.message || t("login.serverError"));
     } finally {
       setLoading(false);
     }
@@ -108,17 +110,17 @@ function Login() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-[#317873] via-[#255c57] to-[#173c38] px-4">
       <div className="w-full max-w-lg rounded-2xl bg-white p-8 shadow-2xl">
         <h2 className="mb-6 text-center text-3xl font-bold text-[#317873]">
-          Login
+          {t("login.title")}
         </h2>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              Username
+              {t("login.username")}
             </label>
             <input
               type="text"
-              placeholder="Username"
+              placeholder={t("login.username")}
               className="w-full rounded-lg border border-slate-300 p-3 outline-none focus:border-[#317873] focus:ring-2 focus:ring-[#317873]/10"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -128,13 +130,13 @@ function Login() {
 
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              Password
+              {t("login.password")}
             </label>
 
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Password"
+                placeholder={t("login.password")}
                 className="w-full rounded-lg border border-slate-300 p-3 pr-12 outline-none focus:border-[#317873] focus:ring-2 focus:ring-[#317873]/10"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -145,7 +147,11 @@ function Login() {
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={
+                  showPassword
+                    ? t("login.hidePassword")
+                    : t("login.showPassword")
+                }
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -155,7 +161,7 @@ function Login() {
               to="/forgot-password"
               className="mt-2 inline-block text-sm text-[#317873] hover:underline"
             >
-              Forgot password?
+              {t("login.forgotPassword")}
             </Link>
           </div>
 
@@ -169,7 +175,7 @@ function Login() {
             disabled={loading}
             className="w-full rounded-lg bg-[#317873] py-3 font-medium text-white transition hover:bg-[#255c57] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? "Loading..." : "Login"}
+            {loading ? t("login.loading") : t("login.submit")}
           </button>
         </form>
       </div>

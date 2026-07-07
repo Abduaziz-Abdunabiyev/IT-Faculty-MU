@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer
       className="
@@ -26,15 +29,13 @@ function Footer() {
               IT Department
             </h2>
 
-            <p className="text-[18px] mb-3">Millat Umidi University</p>
+            <p className="text-[18px] mb-3">{t("footer.university")}</p>
 
             <p className="text-[17px] mb-3">📞 +998 90 123 45 67</p>
 
             <p className="text-[17px] mb-3">✉️ info@itfaculty.uz</p>
 
-            <p className="text-[17px] mb-4">
-              📍 Chilonzor 2-Charkh Kamolon 100043, Tashkent
-            </p>
+            <p className="text-[17px] mb-4">📍 {t("footer.address")}</p>
 
             {/* Social icons */}
             <div className="flex gap-4 mt-2">
@@ -94,30 +95,32 @@ function Footer() {
 
           {/* About */}
           <div>
-            <h3 className="text-[24px] font-semibold mb-4">About</h3>
+            <h3 className="text-[24px] font-semibold mb-4">
+              {t("footer.aboutTitle")}
+            </h3>
 
             <ul className="space-y-3 text-[16px]">
               <li>
                 <Link to="/about" className="hover:underline">
-                  About Faculty
+                  {t("footer.aboutFaculty")}
                 </Link>
               </li>
 
               <li>
                 <Link to="/about" className="hover:underline">
-                  Our Vision
+                  {t("footer.ourVision")}
                 </Link>
               </li>
 
               <li>
                 <Link to="/about" className="hover:underline">
-                  Accreditation
+                  {t("footer.accreditation")}
                 </Link>
               </li>
 
               <li>
                 <Link to="/about" className="hover:underline">
-                  Privacy Policy
+                  {t("footer.privacy")}
                 </Link>
               </li>
             </ul>
@@ -125,7 +128,9 @@ function Footer() {
 
           {/* Courses */}
           <div>
-            <h3 className="text-[24px] font-semibold mb-4">Courses & Labs</h3>
+            <h3 className="text-[24px] font-semibold mb-4">
+              {t("footer.coursesTitle")}
+            </h3>
 
             <ul className="space-y-3 text-[16px]">
               <li>
@@ -133,13 +138,13 @@ function Footer() {
                   to="/category/web-development"
                   className="hover:underline"
                 >
-                  Frontend Development
+                  {t("footer.frontend")}
                 </Link>
               </li>
 
               <li>
                 <Link to="/category/data-science" className="hover:underline">
-                  Data Science
+                  {t("footer.dataScience")}
                 </Link>
               </li>
 
@@ -148,13 +153,13 @@ function Footer() {
                   to="/category/artificial-intelligence"
                   className="hover:underline"
                 >
-                  AI & Machine Learning
+                  {t("footer.aiml")}
                 </Link>
               </li>
 
               <li>
                 <Link to="/category/cyber-security" className="hover:underline">
-                  Cyber Security
+                  {t("footer.cyber")}
                 </Link>
               </li>
             </ul>
@@ -162,30 +167,32 @@ function Footer() {
 
           {/* 🔥 Support endi yonida chiqadi */}
           <div>
-            <h3 className="text-[24px] font-semibold mb-4">Support</h3>
+            <h3 className="text-[24px] font-semibold mb-4">
+              {t("footer.supportTitle")}
+            </h3>
 
             <ul className="space-y-3 text-[16px]">
               <li>
                 <Link to="/about" className="hover:underline">
-                  FAQs
+                  {t("footer.faqs")}
                 </Link>
               </li>
 
               <li>
                 <Link to="/about" className="hover:underline">
-                  Admission Info
+                  {t("footer.admission")}
                 </Link>
               </li>
 
               <li>
                 <Link to="/about" className="hover:underline">
-                  Internships
+                  {t("footer.internships")}
                 </Link>
               </li>
 
               <li>
                 <Link to="/about" className="hover:underline">
-                  Contact Us
+                  {t("footer.contactUs")}
                 </Link>
               </li>
             </ul>
@@ -193,16 +200,15 @@ function Footer() {
         </div>
 
         {/* Copyright */}
-        {/* Copyright */}
         <div className="border-t border-white/10 mt-10 pt-8">
           <p className="text-center text-sm text-white/70">
-            © 2026 IT Department — Millat Umidi University. All rights reserved.
+            © 2026 IT Department — {t("footer.university")}. {t("footer.rights")}
           </p>
 
           <div className="mt-5 flex justify-center">
             <div className="text-center">
               <div className="text-[10px] uppercase tracking-[0.35em] text-white/25">
-                Designed & Developed by
+                {t("footer.designedBy")}
               </div>
 
               <div

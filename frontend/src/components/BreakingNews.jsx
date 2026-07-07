@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { API_BASE } from "../services/adminApi";
 
 function BreakingNews() {
+  const { t } = useTranslation();
   const [news, setNews] = useState([]);
   const scrollRef = useRef(null);
 
@@ -83,7 +85,7 @@ function BreakingNews() {
         <div className="relative mb-8">
           <div className="text-center">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1]">
-              Breaking News
+              {t("home.breakingNews.title")}
             </h2>
 
             <div className="relative w-24 h-1 mx-auto mt-4 overflow-hidden rounded-full bg-[#d8f3ea] dark:bg-[#1f355f]">
@@ -95,7 +97,7 @@ function BreakingNews() {
             <button
               onClick={scrollLeft}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-100 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
-              aria-label="Scroll left"
+              aria-label={t("home.breakingNews.scrollLeft")}
             >
               &#8249;
             </button>
@@ -103,7 +105,7 @@ function BreakingNews() {
             <button
               onClick={scrollRight}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-100 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
-              aria-label="Scroll right"
+              aria-label={t("home.breakingNews.scrollRight")}
             >
               &#8250;
             </button>

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   ArrowRight,
   CalendarDays,
@@ -14,6 +15,7 @@ import {
 import { API_BASE } from "../../services/adminApi";
 
 function HeroSection() {
+  const { t } = useTranslation();
   const [upcoming, setUpcoming] = useState([]);
   const [past, setPast] = useState([]);
   const [featured, setFeatured] = useState([]);
@@ -117,7 +119,7 @@ function HeroSection() {
             <div className="mx-auto max-w-3xl text-center">
               <div className="inline-flex items-center gap-2 rounded-full border border-[#B69B83]/25 bg-white/70 dark:bg-white/5 px-4 py-2 text-xs sm:text-sm font-medium text-[#7A644F] dark:text-[#AAF0D1] shadow-sm backdrop-blur">
                 <Sparkles className="h-4 w-4" />
-                Featured Announcement
+                {t("home.hero.featuredBadge")}
               </div>
 
               <h1 className="mt-6 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#F5FBFF] leading-tight">
@@ -133,7 +135,7 @@ function HeroSection() {
                   to={`/announcement/${featured[index].slug}`}
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#091728] px-5 py-2.5 text-sm sm:text-base text-white shadow-lg shadow-slate-900/10 transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-[#AAF0D1] dark:text-[#081120] dark:hover:bg-[#8ce9c2]"
                 >
-                  Details <ArrowRight className="h-4 w-4" />
+                  {t("home.hero.details")} <ArrowRight className="h-4 w-4" />
                 </Link>
 
                 {featured[index].telegram_link && (
@@ -143,7 +145,7 @@ function HeroSection() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#B69B83]/40 bg-white/70 px-5 py-2.5 text-sm sm:text-base text-[#5B4A3A] shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-[#AAF0D1] hover:text-[#091728] dark:bg-white/5 dark:text-slate-200 dark:hover:text-white"
                   >
-                    Register <ExternalLink className="h-4 w-4" />
+                    {t("home.hero.register")} <ExternalLink className="h-4 w-4" />
                   </a>
                 )}
               </div>
@@ -153,7 +155,7 @@ function HeroSection() {
                   <button
                     key={i}
                     onClick={() => setIndex(i)}
-                    aria-label={`Go to featured announcement ${i + 1}`}
+                    aria-label={t("home.hero.goToAnnouncement", { number: i + 1 })}
                     className={`h-3 rounded-full transition-all duration-300 ${
                       index === i
                         ? "w-10 bg-[#091728] dark:bg-[#AAF0D1]"
@@ -175,16 +177,15 @@ function HeroSection() {
         <div className="max-w-7xl mx-auto px-6 pt-20 pb-14 relative text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#B69B83]/25 bg-white/70 dark:bg-white/5 px-4 py-2 text-xs sm:text-sm font-medium text-[#7A644F] dark:text-[#AAF0D1] shadow-sm backdrop-blur">
             <Landmark className="h-4 w-4" />
-            IT Department Announcements
+            {t("home.hero.announcementsBadge")}
           </div>
 
           <h1 className="mt-6 text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-[#091728] dark:text-[#F5FBFF] leading-tight">
-            Department Timeline
+            {t("home.hero.timelineTitle")}
           </h1>
 
           <p className="mt-4 text-sm sm:text-base md:text-lg leading-7 md:leading-8 text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-            Upcoming and past items related to research talks, workshops, and
-            departmental announcements.
+            {t("home.hero.timelineSubtitle")}
           </p>
         </div>
       </section>
@@ -198,10 +199,10 @@ function HeroSection() {
               </div>
               <div>
                 <h2 className="text-xl sm:text-2xl font-semibold text-[#091728] dark:text-white">
-                  Upcoming
+                  {t("home.hero.upcoming")}
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-                  Scheduled events and announcements
+                  {t("home.hero.upcomingSubtitle")}
                 </p>
               </div>
             </div>
@@ -242,7 +243,7 @@ function HeroSection() {
                         to={`/announcement/${item.slug}`}
                         className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#091728] px-5 py-2.5 text-sm sm:text-base text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-[#AAF0D1] dark:text-[#081120] dark:hover:bg-[#8ce9c2]"
                       >
-                        Details <ChevronRight className="h-4 w-4" />
+                        {t("home.hero.details")} <ChevronRight className="h-4 w-4" />
                       </Link>
 
                       {item.telegram_link && (
@@ -252,7 +253,7 @@ function HeroSection() {
                           rel="noopener noreferrer"
                           className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#B69B83]/40 bg-white px-5 py-2.5 text-sm sm:text-base text-[#5B4A3A] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#AAF0D1] hover:text-[#091728] dark:bg-white/5 dark:text-slate-200 dark:hover:text-white"
                         >
-                          Register <ExternalLink className="h-4 w-4" />
+                          {t("home.hero.register")} <ExternalLink className="h-4 w-4" />
                         </a>
                       )}
                     </div>
@@ -269,10 +270,10 @@ function HeroSection() {
               </div>
               <div>
                 <h2 className="text-xl sm:text-2xl font-semibold text-[#091728] dark:text-white">
-                  Past
+                  {t("home.hero.past")}
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-                  Archived departmental records
+                  {t("home.hero.pastSubtitle")}
                 </p>
               </div>
             </div>

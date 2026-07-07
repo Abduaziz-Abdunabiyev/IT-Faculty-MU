@@ -4,14 +4,49 @@
     "about": "Biz haqimizda",
     "teachers": "O‘qituvchilar",
     "courses": "Kurslar",
+    "events": "Tadbirlar",
+    "publications": "Nashrlar",
+    "certificates": "Sertifikatlar",
     "research": "Tadqiqot",
     "contact": "Aloqa"
   },
+  "auth": {
+    "login": "Kirish",
+    "logout": "Chiqish",
+    "dashboard": "Boshqaruv paneli"
+  },
+  "roles": {
+    "admin": "Admin",
+    "teacher": "O‘qituvchi"
+  },
+  "common": {
+    "search": "Qidirish...",
+    "readMore": "Batafsil",
+    "viewProfile": "Profil"
+  },
   "footer": {
-    "rights": "Barcha huquqlar himoyalangan."
+    "university": "Millat Umidi Universiteti",
+    "address": "Chilonzor 2-Charx Kamolon 100043, Toshkent",
+    "aboutTitle": "Biz haqimizda",
+    "aboutFaculty": "Fakultet haqida",
+    "ourVision": "Bizning maqsad",
+    "accreditation": "Akkreditatsiya",
+    "privacy": "Maxfiylik siyosati",
+    "coursesTitle": "Kurslar va laboratoriyalar",
+    "frontend": "Frontend dasturlash",
+    "dataScience": "Data Science",
+    "aiml": "AI va Mashinaviy o‘rganish",
+    "cyber": "Kiberxavfsizlik",
+    "supportTitle": "Yordam",
+    "faqs": "Ko‘p so‘raladigan savollar",
+    "admission": "Qabul haqida ma’lumot",
+    "internships": "Amaliyot",
+    "contactUs": "Bog‘lanish",
+    "rights": "Barcha huquqlar himoyalangan.",
+    "designedBy": "Ishlab chiqildi"
   },
   "buttons": {
-    "viewProfile": "Profilni ko‘rish",
+    "viewProfile": "Profil",
     "readMore": "Batafsil"
   },
   "teacher": {
@@ -21,5 +56,65 @@
     "research": "Tadqiqot",
     "publications": "Nashrlar",
     "honors": "Mukofotlar va yutuqlar"
+  },
+  "home": {
+    "hero": {
+      "featuredBadge": "Tanlangan e’lon",
+      "details": "Batafsil",
+      "register": "Ro‘yxatdan o‘tish",
+      "goToAnnouncement": "{{number}}-tanlangan e’longa o‘tish",
+      "announcementsBadge": "IT Department e’lonlari",
+      "timelineTitle": "Kafedra xronologiyasi",
+      "timelineSubtitle": "Ilmiy ma’ruzalar, seminarlar va kafedra e’lonlariga oid bo‘lajak va o‘tgan tadbirlar.",
+      "upcoming": "Bo‘lajak",
+      "upcomingSubtitle": "Rejalashtirilgan tadbirlar va e’lonlar",
+      "past": "O‘tgan",
+      "pastSubtitle": "Kafedraning arxiv yozuvlari"
+    },
+    "statistics": {
+      "title": "Kafedra statistikasi"
+    },
+    "about": {
+      "title": "Biz haqimizda",
+      "readMore": "Batafsil →",
+      "hoursTitle": "Kafedra ish vaqti",
+      "mondayFriday": "Dushanba - Juma:",
+      "saturday": "Shanba:",
+      "sunday": "Yakshanba:",
+      "headOf": "IT KAFEDRASI",
+      "itDepartment": "MUDIRI",
+      "noPhoto": "Rasm yo‘q"
+    },
+    "publications": {
+      "badge": "Tadqiqot va nashrlar",
+      "title": "So‘nggi nashrlar",
+      "subtitle": "Kafedramiz a’zolari tomonidan chop etilgan ilmiy maqolalar, jurnallar va tadqiqot ishlari.",
+      "hide": "Yashirish",
+      "unhide": "Ko‘rsatish",
+      "viewDetails": "Nashr tafsilotlarini ko‘rish",
+      "updateFailed": "Yangilab bo‘lmadi"
+    },
+    "breakingNews": {
+      "title": "Muhim yangiliklar",
+      "scrollLeft": "Chapga aylantirish",
+      "scrollRight": "O‘ngga aylantirish"
+    },
+    "partners": {
+      "title": "Bizning hamkorlar"
+    }
+  },
+  "login": {
+    "title": "Kirish",
+    "username": "Foydalanuvchi nomi",
+    "password": "Parol",
+    "forgotPassword": "Parolni unutdingizmi?",
+    "showPassword": "Parolni ko‘rsatish",
+    "hidePassword": "Parolni yashirish",
+    "submit": "Kirish",
+    "loading": "Yuklanmoqda...",
+    "loginFailed": "Kirishda xatolik",
+    "tokenError": "Token javobi noto‘g‘ri.",
+    "userDataError": "Foydalanuvchi ma’lumotlarini olishda xatolik",
+    "serverError": "Server xatosi"
   }
 }

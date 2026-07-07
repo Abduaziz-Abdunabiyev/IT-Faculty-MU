@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../../services/adminApi";
 
 function AboutSection() {
+  const { t } = useTranslation();
   const BASE_URL = API_BASE;
 
   const [department, setDepartment] = useState(null);
@@ -70,7 +72,7 @@ function AboutSection() {
             {/* ABOUT */}
             <div className="rounded-3xl border border-slate-200/70 bg-white p-6 md:p-8 shadow-[0_18px_50px_rgba(15,23,42,0.06)] transition-all duration-300 dark:border-white/10 dark:bg-[#1A2644]">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1] mb-5">
-                About Us
+                {t("home.about.title")}
               </h2>
 
               <p className="text-sm sm:text-base text-[#4b5563] dark:text-gray-300 leading-7 text-justify">
@@ -88,7 +90,7 @@ function AboutSection() {
                   onClick={() => setShowMore(true)}
                   className="mt-6 text-sm sm:text-base text-[#317873] hover:text-[#245c58] dark:hover:text-[#AAF0D1] transition-all duration-200 font-semibold"
                 >
-                  Read more →
+                  {t("home.about.readMore")}
                 </button>
               )}
             </div>
@@ -97,27 +99,27 @@ function AboutSection() {
             <div className="rounded-3xl border border-slate-200/70 bg-white p-6 md:p-8 shadow-[0_18px_50px_rgba(15,23,42,0.06)] dark:border-white/10 dark:bg-[#1A2644]">
               <div className="border-l-4 border-[#317873] pl-4">
                 <h3 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1] mb-5">
-                  Department Hours
+                  {t("home.about.hoursTitle")}
                 </h3>
 
                 <div className="space-y-4 text-sm sm:text-base text-gray-700 dark:text-gray-300">
                   <p>
                     <span className="font-semibold text-[#317873]">
-                      Monday - Friday:
+                      {t("home.about.mondayFriday")}
                     </span>{" "}
                     {department.monday_friday_hours}
                   </p>
 
                   <p>
                     <span className="font-semibold text-[#317873]">
-                      Saturday:
+                      {t("home.about.saturday")}
                     </span>{" "}
                     {department.saturday_hours}
                   </p>
 
                   <p>
                     <span className="font-semibold text-[#a94444]">
-                      Sunday:
+                      {t("home.about.sunday")}
                     </span>{" "}
                     {department.sunday_hours}
                   </p>
@@ -133,11 +135,11 @@ function AboutSection() {
             {/* TEXT */}
             <div className="space-y-4 max-w-[520px]">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#317873] dark:text-[#AAF0D1]">
-                HEAD OF
+                {t("home.about.headOf")}
               </h2>
 
               <h3 className="text-2xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-[#091728] dark:text-white">
-                IT DEPARTMENT
+                {t("home.about.itDepartment")}
               </h3>
 
               <h6 className="text-2xl sm:text-3xl lg:text-4xl text-[#B69B83] font-semibold leading-tight">
@@ -161,7 +163,7 @@ function AboutSection() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center -rotate-45 text-[#317873] text-sm sm:text-base font-semibold">
-                      No photo
+                      {t("home.about.noPhoto")}
                     </div>
                   )}
                 </div>

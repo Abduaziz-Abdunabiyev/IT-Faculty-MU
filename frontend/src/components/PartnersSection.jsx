@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../services/adminApi";
 
 function PartnersSection() {
+  const { t } = useTranslation();
   const [partners, setPartners] = useState([]);
   const API_BASE_URL = API_BASE;
 
@@ -91,7 +93,7 @@ function PartnersSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center animate-fade-up">
           <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#091728] dark:text-[#AAF0D1]">
-            Our Partners
+            {t("home.partners.title")}
           </h2>
 
           <div className="relative mx-auto mt-4 h-1 w-24 overflow-hidden rounded-full bg-[#d8f3ea] dark:bg-[#1f355f]">

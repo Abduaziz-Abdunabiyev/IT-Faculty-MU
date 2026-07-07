@@ -4,14 +4,49 @@
     "about": "О нас",
     "teachers": "Преподаватели",
     "courses": "Курсы",
+    "events": "События",
+    "publications": "Публикации",
+    "certificates": "Сертификаты",
     "research": "Исследования",
     "contact": "Контакты"
   },
+  "auth": {
+    "login": "Войти",
+    "logout": "Выйти",
+    "dashboard": "Панель"
+  },
+  "roles": {
+    "admin": "Админ",
+    "teacher": "Преподаватель"
+  },
+  "common": {
+    "search": "Поиск...",
+    "readMore": "Подробнее",
+    "viewProfile": "Профиль"
+  },
   "footer": {
-    "rights": "Все права защищены."
+    "university": "Университет Миллат Умид",
+    "address": "Чиланзор 2-Чарх Камолон 100043, Ташкент",
+    "aboutTitle": "О нас",
+    "aboutFaculty": "О факультете",
+    "ourVision": "Наша миссия",
+    "accreditation": "Аккредитация",
+    "privacy": "Политика конфиденциальности",
+    "coursesTitle": "Курсы и лаборатории",
+    "frontend": "Frontend-разработка",
+    "dataScience": "Data Science",
+    "aiml": "ИИ и машинное обучение",
+    "cyber": "Кибербезопасность",
+    "supportTitle": "Поддержка",
+    "faqs": "Частые вопросы",
+    "admission": "Информация о поступлении",
+    "internships": "Стажировки",
+    "contactUs": "Связаться с нами",
+    "rights": "Все права защищены.",
+    "designedBy": "Дизайн и разработка"
   },
   "buttons": {
-    "viewProfile": "Посмотреть профиль",
+    "viewProfile": "Профиль",
     "readMore": "Подробнее"
   },
   "teacher": {
@@ -21,5 +56,65 @@
     "research": "Исследования",
     "publications": "Публикации",
     "honors": "Награды и достижения"
+  },
+  "home": {
+    "hero": {
+      "featuredBadge": "Избранное объявление",
+      "details": "Подробнее",
+      "register": "Регистрация",
+      "goToAnnouncement": "Перейти к избранному объявлению {{number}}",
+      "announcementsBadge": "Объявления IT Department",
+      "timelineTitle": "Хронология кафедры",
+      "timelineSubtitle": "Предстоящие и прошедшие мероприятия, связанные с научными докладами, семинарами и объявлениями кафедры.",
+      "upcoming": "Предстоящие",
+      "upcomingSubtitle": "Запланированные события и объявления",
+      "past": "Прошедшие",
+      "pastSubtitle": "Архивные записи кафедры"
+    },
+    "statistics": {
+      "title": "Статистика кафедры"
+    },
+    "about": {
+      "title": "О нас",
+      "readMore": "Подробнее →",
+      "hoursTitle": "Часы работы кафедры",
+      "mondayFriday": "Понедельник - Пятница:",
+      "saturday": "Суббота:",
+      "sunday": "Воскресенье:",
+      "headOf": "ЗАВЕДУЮЩИЙ",
+      "itDepartment": "КАФЕДРОЙ IT",
+      "noPhoto": "Нет фото"
+    },
+    "publications": {
+      "badge": "Исследования и публикации",
+      "title": "Последние публикации",
+      "subtitle": "Научные статьи, журналы и исследовательские работы, опубликованные сотрудниками нашей кафедры.",
+      "hide": "Скрыть",
+      "unhide": "Показать",
+      "viewDetails": "Посмотреть детали публикации",
+      "updateFailed": "Не удалось обновить"
+    },
+    "breakingNews": {
+      "title": "Срочные новости",
+      "scrollLeft": "Прокрутить влево",
+      "scrollRight": "Прокрутить вправо"
+    },
+    "partners": {
+      "title": "Наши партнёры"
+    }
+  },
+  "login": {
+    "title": "Вход",
+    "username": "Имя пользователя",
+    "password": "Пароль",
+    "forgotPassword": "Забыли пароль?",
+    "showPassword": "Показать пароль",
+    "hidePassword": "Скрыть пароль",
+    "submit": "Войти",
+    "loading": "Загрузка...",
+    "loginFailed": "Не удалось войти",
+    "tokenError": "Некорректный ответ токена.",
+    "userDataError": "Ошибка при получении данных пользователя",
+    "serverError": "Ошибка сервера"
   }
 }

@@ -4,11 +4,46 @@
     "about": "About",
     "teachers": "Teachers",
     "courses": "Courses",
+    "events": "Events",
+    "publications": "Publications",
+    "certificates": "Certificates",
     "research": "Research",
     "contact": "Contact"
   },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "dashboard": "Dashboard"
+  },
+  "roles": {
+    "admin": "Admin",
+    "teacher": "Teacher"
+  },
+  "common": {
+    "search": "Search...",
+    "readMore": "Read More",
+    "viewProfile": "View Profile"
+  },
   "footer": {
-    "rights": "All rights reserved."
+    "university": "Millat Umidi University",
+    "address": "Chilonzor 2-Charkh Kamolon 100043, Tashkent",
+    "aboutTitle": "About",
+    "aboutFaculty": "About Faculty",
+    "ourVision": "Our Vision",
+    "accreditation": "Accreditation",
+    "privacy": "Privacy Policy",
+    "coursesTitle": "Courses & Labs",
+    "frontend": "Frontend Development",
+    "dataScience": "Data Science",
+    "aiml": "AI & Machine Learning",
+    "cyber": "Cyber Security",
+    "supportTitle": "Support",
+    "faqs": "FAQs",
+    "admission": "Admission Info",
+    "internships": "Internships",
+    "contactUs": "Contact Us",
+    "rights": "All rights reserved.",
+    "designedBy": "Designed & Developed by"
   },
   "buttons": {
     "viewProfile": "View Profile",
@@ -21,5 +56,65 @@
     "research": "Research",
     "publications": "Publications",
     "honors": "Honors & Awards"
+  },
+  "home": {
+    "hero": {
+      "featuredBadge": "Featured Announcement",
+      "details": "Details",
+      "register": "Register",
+      "goToAnnouncement": "Go to featured announcement {{number}}",
+      "announcementsBadge": "IT Department Announcements",
+      "timelineTitle": "Department Timeline",
+      "timelineSubtitle": "Upcoming and past items related to research talks, workshops, and departmental announcements.",
+      "upcoming": "Upcoming",
+      "upcomingSubtitle": "Scheduled events and announcements",
+      "past": "Past",
+      "pastSubtitle": "Archived departmental records"
+    },
+    "statistics": {
+      "title": "Department Statistics"
+    },
+    "about": {
+      "title": "About Us",
+      "readMore": "Read more →",
+      "hoursTitle": "Department Hours",
+      "mondayFriday": "Monday - Friday:",
+      "saturday": "Saturday:",
+      "sunday": "Sunday:",
+      "headOf": "HEAD OF",
+      "itDepartment": "IT DEPARTMENT",
+      "noPhoto": "No photo"
+    },
+    "publications": {
+      "badge": "Research & Publications",
+      "title": "Latest Publications",
+      "subtitle": "Scientific papers, journals and research works published by our department members.",
+      "hide": "Hide",
+      "unhide": "Unhide",
+      "viewDetails": "View Publication Details",
+      "updateFailed": "Update failed"
+    },
+    "breakingNews": {
+      "title": "Breaking News",
+      "scrollLeft": "Scroll left",
+      "scrollRight": "Scroll right"
+    },
+    "partners": {
+      "title": "Our Partners"
+    }
+  },
+  "login": {
+    "title": "Login",
+    "username": "Username",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "submit": "Login",
+    "loading": "Loading...",
+    "loginFailed": "Login failed",
+    "tokenError": "Invalid token response.",
+    "userDataError": "Failed to fetch user data",
+    "serverError": "Server error"
   }
 }

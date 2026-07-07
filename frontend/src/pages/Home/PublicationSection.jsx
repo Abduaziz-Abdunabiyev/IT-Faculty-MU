@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { Calendar, User, BookOpen, ArrowUpRight } from "lucide-react";
 import { API_BASE } from "../../services/adminApi";
 
 function PublicationSection() {
+  const { t } = useTranslation();
   const BASE_URL = API_BASE;
   const navigate = useNavigate();
 
@@ -58,7 +60,7 @@ function PublicationSection() {
     });
 
     if (!res.ok) {
-      alert("Update failed ❌");
+      alert(t("home.publications.updateFailed"));
       return;
     }
 
@@ -95,16 +97,15 @@ function PublicationSection() {
           "
           >
             <BookOpen size={16} />
-            Research & Publications
+            {t("home.publications.badge")}
           </span>
 
           <h2 className="mt-6 text-4xl md:text-5xl font-bold text-[#091728] dark:text-white">
-            Latest Publications
+            {t("home.publications.title")}
           </h2>
 
           <p className="mt-4 max-w-2xl mx-auto text-slate-500 dark:text-slate-400">
-            Scientific papers, journals and research works published by our
-            department members.
+            {t("home.publications.subtitle")}
           </p>
         </div>
 
@@ -255,7 +256,9 @@ function PublicationSection() {
                               : "border-red-500 text-red-500 hover:bg-red-500/10"
                           }`}
                         >
-                          {pub.is_hidden ? "Unhide" : "Hide"}
+                          {pub.is_hidden
+                            ? t("home.publications.unhide")
+                            : t("home.publications.hide")}
                         </button>
                       </div>
                     )}
@@ -273,7 +276,7 @@ function PublicationSection() {
                     "
                     >
                       <span className="text-sm text-slate-500 dark:text-slate-400">
-                        View Publication Details
+                        {t("home.publications.viewDetails")}
                       </span>
 
                       <ArrowUpRight size={18} className="text-[#317873]" />
