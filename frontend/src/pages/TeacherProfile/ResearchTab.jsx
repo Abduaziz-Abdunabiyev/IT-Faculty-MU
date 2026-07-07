@@ -18,6 +18,14 @@ function ResearchTab({ researchList }) {
         {researchList.map((research) => {
           const content = (
             <>
+              {research.image_display ? (
+                <img
+                  src={research.image_display}
+                  alt={research.project_title}
+                  className="mb-3 h-40 w-full rounded object-cover"
+                />
+              ) : null}
+
               <div className="flex items-start justify-between gap-3">
                 <h4 className="font-semibold text-[#317873]">
                   {research.project_title}

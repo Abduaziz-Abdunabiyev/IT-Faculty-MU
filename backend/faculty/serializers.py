@@ -275,8 +275,6 @@ class ResearchSerializer(serializers.ModelSerializer):
     period = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
 
-    image_url = serializers.CharField(write_only=True, required=False, allow_blank=True, allow_null=True)
-
     id = serializers.IntegerField(required=False)
     teacher = serializers.PrimaryKeyRelatedField(
         queryset=Teacher.objects.all(), required=False
@@ -316,7 +314,7 @@ class ResearchSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if obj.image and hasattr(obj.image, "url"):
             return request.build_absolute_uri(obj.image.url) if request else obj.image.url
-        return None
+        return obj.image_url or None
 
     def get_period(self, obj):
         if obj.end_year:
@@ -327,11 +325,9 @@ class ResearchSerializer(serializers.ModelSerializer):
         return "Completed" if obj.end_year else "Ongoing"
 
     def create(self, validated_data):
-        validated_data.pop("image_url", None)
         return Research.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        validated_data.pop("image_url", None)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.full_clean()
