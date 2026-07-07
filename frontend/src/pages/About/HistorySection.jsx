@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
+import { API_BASE } from "../../services/adminApi";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -27,7 +28,7 @@ function HistorySection() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/departments/")
+    fetch(`${API_BASE}/api/departments/`)
       .then((res) => res.json())
       .then((data) => {
         const results = data?.results || data || [];
@@ -37,7 +38,7 @@ function HistorySection() {
       .finally(() => setLoading(false));
   }, []);
 
-  const pdfUrl = useMemo(() => "/api/departments/history-pdf/", []);
+  const pdfUrl = useMemo(() => `${API_BASE}/api/departments/history-pdf/`, []);
 
   const onLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
