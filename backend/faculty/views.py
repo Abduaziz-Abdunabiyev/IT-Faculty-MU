@@ -111,6 +111,11 @@ class DepartmentAdminSerializer(serializers.ModelSerializer):
         required=False,
     )
     head_name = serializers.SerializerMethodField()
+    # These model fields are blank=False but carry a default; the form can still
+    # submit them empty, so accept "" instead of rejecting with 400.
+    monday_friday_hours = serializers.CharField(required=False, allow_blank=True)
+    saturday_hours = serializers.CharField(required=False, allow_blank=True)
+    sunday_hours = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = Department
@@ -120,6 +125,7 @@ class DepartmentAdminSerializer(serializers.ModelSerializer):
             "description",
             "about_extra",
             "image",
+            "history_pdf",
             "head",
             "head_name",
             "monday_friday_hours",
@@ -152,13 +158,8 @@ class TeacherViewSet(ModelViewSet):
     filterset_fields = ["is_active", "position"]
 
     def update(self, request, *args, **kwargs):
-        print("\n\n####################")
-        print("VIEWSET UPDATE")
-        print(request.data)
-        print("####################\n")
        
 
-        print("REQUEST =", request.data)
         partial = kwargs.pop("partial", True)
         instance = self.get_object()
         serializer = self.get_serializer(
@@ -311,18 +312,16 @@ class CourseViewSet(ReadOnlyOrAuthMixin, ModelViewSet):
         
         if hasattr(user, "teacher"):
             teacher = user.teacher
-            
+
             assigned = TeacherCourse.objects.filter(
                 teacher=teacher,
                 course=course
             ).exists()
-            
+
             if not assigned:
                 raise PermissionDenied(
                     "You can only edit your own courses."
                 )
-            
-        serializer.save()    
 
     @action(
         detail=False,
@@ -765,7 +764,6 @@ class CertificateRecipientViewSet(ModelViewSet):
     filterset_fields = ["certificate", "teacher", "student", "department"]
 
     def create(self, request, *args, **kwargs):
-        print("REQUEST DATA =", request.data)
         return super().create(request, *args, **kwargs)
 
     def get_permissions(self):
@@ -963,7 +961,7 @@ class EventViewSet(ReadOnlyOrAuthMixin, ModelViewSet):
         return Response(serializer.data)
 
 
-class StatisticsViewSet(ModelViewSet):
+class StatisticsViewSet(ReadOnlyOrAuthMixin, ModelViewSet):
     queryset = Statistics.objects.all()
     serializer_class = StatisticsSerializer
 

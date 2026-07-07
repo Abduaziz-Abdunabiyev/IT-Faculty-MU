@@ -716,14 +716,8 @@ class TeacherSerializer(serializers.ModelSerializer):
         return obj.user.username if obj.user else None
 
     def _save_nested_items(self,teacher,field_name,serializer_class,items,):
-        print("\n========================")
-        print("FIELD:", field_name)
-        print("========================")
 
         
-        print("ITEMS COUNT:", len(items or []))
-        print("ITEMS:", items)
-        print("========================")
 
         
         
@@ -739,11 +733,6 @@ class TeacherSerializer(serializers.ModelSerializer):
         incoming_ids = set()
         
         for item in items or []:
-            print("\n===================")
-            print("ITEM =", item)
-            print("ITEM ID =", item.get("id"))
-            print("ITEM TYPE =", type(item.get("id")))
-            print("===================\n")
             
             try:
                 obj_id = item.get("id")
@@ -771,7 +760,6 @@ class TeacherSerializer(serializers.ModelSerializer):
 
                     incoming_ids.add(obj_id)
 
-                    print("UPDATED:", updated_obj)
 
             # CREATE
                 else:
@@ -795,22 +783,16 @@ class TeacherSerializer(serializers.ModelSerializer):
 
                     incoming_ids.add(new_obj.id)
 
-                    print("CREATED:", new_obj)
 
             except Exception as e:
-                print("FAILED IN:", field_name)
-                print("ITEM:", item)
-                print("ERROR:", e)
                 raise
 
     # DELETE
         # DELETE
         for obj_id, obj in existing_objects.items():
-            print("CHECK DELETE:", obj_id, obj)
             
             if obj_id not in incoming_ids:
                 if obj.pk is None:
-                    print("SKIPPED NONE PK:", obj)
                     
                     continue
 
@@ -823,7 +805,6 @@ class TeacherSerializer(serializers.ModelSerializer):
 
                 obj.delete()
 
-                print("DELETED:", obj_id)
 
     @transaction.atomic
     def create(self, validated_data):
@@ -878,10 +859,6 @@ class TeacherSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        print("\n\n========================")
-        print("TEACHER UPDATE CALLED")
-        print("INSTANCE:", instance.id)
-        print("========================\n")
 
 
 
@@ -1054,22 +1031,30 @@ class CourseSerializer(serializers.ModelSerializer):
 
     grading_criteria = CourseGradingSerializer(
         many=True,
-        required=False
+        read_only=True,
     )
 
     jobs = CourseJobSerializer(
-    many=True,
-    required=False
-)
+        many=True,
+        read_only=True,
+    )
 
     resources = CourseResourceSerializer(
         many=True,
-        required=False
+        read_only=True,
     )
 
     items = CourseItemSerializer(
-    many=True,
-    required=False
+        many=True,
+        read_only=True,
+    )
+
+    # About Title has a model default, so an empty value from the form must be
+    # accepted rather than rejected with "This field may not be blank".
+    about_title = serializers.CharField(
+        max_length=255,
+        required=False,
+        allow_blank=True,
     )
 
     semester = serializers.PrimaryKeyRelatedField(
@@ -1104,19 +1089,34 @@ class CourseSerializer(serializers.ModelSerializer):
     "items",
     ] 
 
-    def create(self, validated_data):
-        jobs_data = validated_data.pop("jobs", [])
-        resources_data = validated_data.pop("resources", [])
-        items_data = validated_data.pop("items", [])
-        grading_data = validated_data.pop("grading_criteria",[])
-        validated_data.pop("weeks", None)
-        request = self.context["request"]
-        weeks_data = request.data.get("weeks", "[]")
-        if isinstance(weeks_data, str):
-            weeks_data = json.loads(weeks_data)
+    @staticmethod
+    def _read_nested(request, key):
+        """Return a nested collection that may arrive either as real JSON (a
+        list, when the body is application/json) or as a JSON string (when the
+        body is multipart/form-data because a file is attached — DRF does NOT
+        parse nested serializers out of multipart form fields, so they must be
+        read from the raw request instead). Returns None when the key is absent
+        so callers can tell "not provided" from "provided but empty".
+        """
+        if key not in request.data:
+            return None
+        raw = request.data.get(key)
+        if isinstance(raw, str):
+            try:
+                raw = json.loads(raw)
+            except (ValueError, TypeError):
+                return None
+        return raw if isinstance(raw, list) else None
 
-        print("REQUEST.DATA =", request.data)
-        print("VALIDATED =", validated_data)    
+    @transaction.atomic
+    def create(self, validated_data):
+        request = self.context["request"]
+        jobs_data = self._read_nested(request, "jobs") or []
+        resources_data = self._read_nested(request, "resources") or []
+        items_data = self._read_nested(request, "items") or []
+        grading_data = self._read_nested(request, "grading_criteria") or []
+        weeks_data = self._read_nested(request, "weeks") or []
+
 
         course = Course.objects.create(**validated_data)
         for job in jobs_data:
@@ -1155,23 +1155,18 @@ class CourseSerializer(serializers.ModelSerializer):
                    )
         return course
 
+    @transaction.atomic
     def update(self, instance, validated_data):
-        jobs_data = validated_data.pop("jobs", None)
-        resources_data = validated_data.pop("resources", None)
-        items_data = validated_data.pop("items", None)
-        grading_data = validated_data.pop("grading_criteria",None)
-        validated_data.pop("weeks", None)
         request = self.context["request"]
-        weeks_data = request.data.get("weeks", "[]")
+        jobs_data = self._read_nested(request, "jobs")
+        resources_data = self._read_nested(request, "resources")
+        items_data = self._read_nested(request, "items")
+        grading_data = self._read_nested(request, "grading_criteria")
+        weeks_data = self._read_nested(request, "weeks")
 
-        print("WEEKS_DATA =", weeks_data)
-        print("TYPE =", type(weeks_data))
 
-        print("REQUEST.DATA =", request.data)
-        print("VALIDATED =", validated_data)
         if isinstance(weeks_data, str):
             weeks_data = json.loads(weeks_data)
-            print("PARSED =", weeks_data)
 
         if weeks_data is not None:
             existing_ids = []
@@ -1237,11 +1232,8 @@ class CourseSerializer(serializers.ModelSerializer):
         instance.save()
 
         if grading_data is not None:
-            print("GRADING DATA =", grading_data)
             existing_ids = []
             for criterion in grading_data:
-                print("CRITERION =", criterion)
-                print("CRITERION ID =", criterion.get("id"))
                 criterion_id = criterion.get("id")
                 if criterion_id:
                     try:
@@ -1416,6 +1408,28 @@ class EventSerializer(serializers.ModelSerializer):
         if obj.image_url:
             return obj.image_url
         return None
+
+    def validate(self, attrs):
+        # Mirror Event.clean() (which runs via full_clean() in save()) so bad
+        # input returns a clean 400 instead of an uncaught 500.
+        speaker = attrs.get("speaker", getattr(self.instance, "speaker", None))
+        speaker_name = attrs.get(
+            "speaker_name", getattr(self.instance, "speaker_name", None)
+        )
+        start_date = attrs.get("start_date", getattr(self.instance, "start_date", None))
+        end_date = attrs.get("end_date", getattr(self.instance, "end_date", None))
+
+        if not speaker and not (speaker_name or "").strip():
+            raise serializers.ValidationError(
+                {"speaker": "Speaker yoki Speaker Name kiritilishi kerak."}
+            )
+
+        if start_date and end_date and end_date < start_date:
+            raise serializers.ValidationError(
+                {"end_date": "End date start date dan keyin bo'lishi kerak."}
+            )
+
+        return attrs
 
 
 
@@ -1603,10 +1617,17 @@ class CertificateSerializer(serializers.ModelSerializer):
             teacher_id = recipient.get("teacher") or None
             student_id = recipient.get("student") or None
             department_id = recipient.get("department") or None
-            # The model requires EXACTLY one recipient; skip empty (0) or
-            # ambiguous (2+) rows rather than letting clean() raise a 500.
-            if sum(1 for x in (teacher_id, student_id, department_id) if x) != 1:
+            chosen = sum(1 for x in (teacher_id, student_id, department_id) if x)
+            # A completely empty row is a not-yet-filled form line — skip it.
+            if chosen == 0:
                 continue
+            # 2+ set is a real mistake: surface a clean 400 instead of silently
+            # dropping the recipient (the model requires EXACTLY one).
+            if chosen > 1:
+                raise serializers.ValidationError({
+                    "recipients": "Har bir qabul qiluvchida faqat bittasi "
+                                  "tanlanishi kerak: teacher, student yoki department."
+                })
             CertificateRecipient.objects.create(
                 certificate=certificate,
                 teacher_id=teacher_id,

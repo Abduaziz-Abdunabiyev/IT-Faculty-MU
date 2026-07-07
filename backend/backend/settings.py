@@ -158,8 +158,19 @@ if os.getenv("DATABASE_URL"):
         "default": dj_database_url.parse(
             os.environ["DATABASE_URL"],
             conn_max_age=600,
+            # Railway's managed MySQL silently drops idle connections. Without a
+            # health check Django reuses a dead persistent connection and the next
+            # query hangs on the OS TCP timeout — long enough to blow the gunicorn
+            # worker timeout and sever the request mid-flight (the client sees
+            # net::ERR_HTTP2_PROTOCOL_ERROR). Health checks reconnect instead.
+            conn_health_checks=True,
         )
     }
+    # Bound the initial connect so a stale/unreachable DB fails fast rather than
+    # hanging the worker (only MySQL/Postgres accept connect_timeout).
+    _engine = DATABASES["default"].get("ENGINE", "")
+    if "mysql" in _engine or "postgresql" in _engine:
+        DATABASES["default"].setdefault("OPTIONS", {})["connect_timeout"] = 10
 else:
     DATABASES = {
         "default": {
